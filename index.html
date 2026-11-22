@@ -61,6 +61,28 @@ footer{text-align:center;color:#aab8ff;font-size:10px;padding:24px 0 8px}@media(
 @keyframes ssazaTicker{from{transform:translateX(0)}to{transform:translateX(-50%)}}
 @media(prefers-reduced-motion:reduce){.announcement-track{animation:none;white-space:normal;flex-wrap:wrap;width:100%;justify-content:center}.announcement-track span{white-space:normal;text-align:center}}
 
+
+/* SSAZA FM weekly programme guide */
+.program-guide{margin:24px 0;background:linear-gradient(145deg,#102681,#081653);border:1px solid #3449b5;border-radius:20px;padding:16px;box-shadow:0 10px 28px #0003}
+.guide-heading{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.guide-heading h2{margin:0;color:var(--yellow);font-size:20px}
+.eat-clock{font-size:11px;color:var(--muted)}
+.now-next{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:14px 0}
+.show-card{background:#07134f;border:1px solid #4054b8;border-radius:14px;padding:13px;min-height:108px}
+.show-card small{display:block;color:var(--yellow);font-weight:800;letter-spacing:1px;font-size:10px;margin-bottom:8px}
+.show-card strong{display:block;font-size:15px;line-height:1.35}
+.show-card span{display:block;color:var(--muted);font-size:11px;margin-top:6px}
+.day-tabs{display:flex;gap:7px;overflow-x:auto;padding:3px 0 12px;scrollbar-width:thin}
+.day-tab{flex:0 0 auto;border:1px solid #5267c5;border-radius:999px;background:#0b1b66;color:#fff;padding:9px 13px;font-weight:700;font-size:11px;cursor:pointer}
+.day-tab[aria-selected="true"]{background:var(--yellow);border-color:var(--yellow);color:#07156f}
+.schedule-list{display:grid;gap:8px}
+.schedule-row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:11px 12px;background:#0a1a61;border:1px solid #263d9b;border-radius:12px}
+.schedule-row.active{border-color:var(--yellow);background:#172b83;box-shadow:inset 3px 0 var(--yellow)}
+.schedule-row strong{font-size:13px;line-height:1.35}.schedule-row time{font-size:11px;color:var(--muted);text-align:right;white-space:nowrap}
+.schedule-row .live-label{display:block;color:var(--yellow);font-size:9px;font-weight:800;letter-spacing:.8px;margin-top:4px}
+.guide-note{color:var(--muted);font-size:10px;line-height:1.5;margin:12px 2px 0}
+@media(max-width:420px){.now-next{grid-template-columns:1fr}.show-card{min-height:auto}}
+
 </style>
 </head>
 <body>
@@ -93,18 +115,104 @@ footer{text-align:center;color:#aab8ff;font-size:10px;padding:24px 0 8px}@media(
 </div></div>
 <p class="hint">Live playback is provided by our existing Caster.fm station player. It needs an internet connection and the station must be on air.</p>
 </section>
+
+<section class="program-guide" id="program-guide" aria-label="Weekly programme guide">
+  <div class="guide-heading"><h2>🗓️ PROGRAMME GUIDE</h2><span class="eat-clock" id="eat-clock">Uganda Time (EAT)</span></div>
+  <div class="now-next">
+    <div class="show-card"><small><i class="dot"></i> ON AIR NOW</small><strong id="on-air-title">Checking today's programme…</strong><span id="on-air-time">Uganda time</span></div>
+    <div class="show-card"><small>COMING UP NEXT</small><strong id="next-title">Loading next show…</strong><span id="next-time">Stay tuned to SSAZA FM 99.8</span></div>
+  </div>
+  <div class="day-tabs" role="tablist" aria-label="Choose programme day">
+    <button class="day-tab" data-day="1" role="tab" aria-selected="true">Mon–Fri</button>
+    <button class="day-tab" data-day="6" role="tab" aria-selected="false">Saturday</button>
+    <button class="day-tab" data-day="0" role="tab" aria-selected="false">Sunday</button>
+  </div>
+  <div class="schedule-list" id="schedule-list"></div>
+  <p class="guide-note">All programme times are East Africa Time (EAT / Uganda time, UTC+3). The ON AIR and COMING UP NEXT panels update automatically using Uganda time, wherever you are listening from.</p>
+</section>
+
 <h2 class="section-title">Explore SSAZA FM</h2>
 <section class="grid">
 <a class="tile" href="https://ssazafm998.ismyradio.com/" target="_blank" rel="noopener"><span class="emoji">📰</span><strong>News & Updates</strong><small>Visit station website</small></a>
-<a class="tile" href="https://ssazafm998.ismyradio.com/schedule" target="_blank" rel="noopener"><span class="emoji">🗓️</span><strong>Program Schedule</strong><small>See what's coming up</small></a>
+<a class="tile" href="#program-guide"><span class="emoji">🗓️</span><strong>Program Schedule</strong><small>See what's coming up</small></a>
 <a class="tile" href="https://ssazafm998.ismyradio.com/" target="_blank" rel="noopener"><span class="emoji">🎧</span><strong>Shows & Podcasts</strong><small>Explore station content</small></a>
 <a class="tile" href="https://wa.me/256743147216" target="_blank" rel="noopener"><span class="emoji">💬</span><strong>WhatsApp & Song Requests</strong><small>+256 743 147 216</small></a>
 </section>
 <h2 class="section-title">About Us</h2>
 <section class="about">SSAZA FM 99.8 is your home of entertainment, information, music and community connection, broadcasting from Bukwiri, Kyankwanzi District, Uganda. We bring you Ugandan music, African rhythms, engaging discussions and community updates.
-<div class="actions"><a class="btn" href="https://wa.me/256743147216" target="_blank" rel="noopener">WhatsApp the station</a><a class="btn" href="tel:+256758672796">Office: 0758 672 796</a><a class="btn" href="tel:+256783895982">Office: 0783 895 982</a><a class="btn" href="tel:+256794588343">Office: 0794 588 343</a><a class="btn" href="https://www.google.com/maps?q=1.117117,31.591590" target="_blank" rel="noopener">📍 Find Our Studio</a><a class="btn" href="https://ssazafm998.ismyradio.com/" target="_blank" rel="noopener">Visit website</a><a class="btn" href="https://ssazafm998.ismyradio.com/schedule" target="_blank" rel="noopener">View schedule</a></div></section>
+<div class="actions"><a class="btn" href="https://wa.me/256743147216" target="_blank" rel="noopener">WhatsApp the station</a><a class="btn" href="tel:+256758672796">Office: 0758 672 796</a><a class="btn" href="tel:+256783895982">Office: 0783 895 982</a><a class="btn" href="tel:+256794588343">Office: 0794 588 343</a><a class="btn" href="https://www.google.com/maps?q=1.117117,31.591590" target="_blank" rel="noopener">📍 Find Our Studio</a><a class="btn" href="https://ssazafm998.ismyradio.com/" target="_blank" rel="noopener">Visit website</a><a class="btn" href="#program-guide">View schedule</a></div></section>
 <footer>© 2026 SSAZA FM 99.8 · Eddoboozi ly'amunassingo</footer>
 </main>
-<nav><a href="#listen"><span>📻</span>Listen</a><a href="https://ssazafm998.ismyradio.com/" target="_blank" rel="noopener"><span>📰</span>News</a><a href="https://ssazafm998.ismyradio.com/schedule" target="_blank" rel="noopener"><span>🗓️</span>Schedule</a><a href="#listen"><span>ℹ️</span>About</a></nav>
+<nav><a href="#listen"><span>📻</span>Listen</a><a href="https://ssazafm998.ismyradio.com/" target="_blank" rel="noopener"><span>📰</span>News</a><a href="#program-guide"><span>🗓️</span>Schedule</a><a href="#listen"><span>ℹ️</span>About</a></nav>
+
+<script>
+(function(){
+  const weekday=[
+    {name:'Bwakedde Mpulira',start:360,end:600},
+    {name:'Kiffa Nsaliira',start:600,end:780},
+    {name:'Ssaza Sports',start:780,end:840},
+    {name:'Busuuka Kkubo',start:840,end:960},
+    {name:'Boarder to Boarder',start:960,end:1140},
+    {name:'Amawuliire mu Luganda',start:1140,end:1150},
+    {name:'Tuwuliziganye',start:1160,end:1260},
+    {name:"Akatabo k'Emizanyo",start:1260,end:1320},
+    {name:'Akutwala Ekiro (The Pillow Talk Show)',start:1320,end:1440}
+  ];
+  const saturday=[
+    {name:'Ssaza Parliament',start:480,end:720},
+    {name:"Akatabo k'Emizanyo Extra",start:720,end:840},
+    {name:'Ssaza Express',start:840,end:960},
+    {name:'Free Moment (Premier League commentary live)',tba:true},
+    {name:'Seventh Day Adventist Church',start:1080,end:1200},
+    {name:'Saturday Dance Force',start:1320,end:1440,late:true}
+  ];
+  const sunday=[
+    {name:'Tumutendeleze',start:360,end:600},
+    {name:'Emiti Emito',start:600,end:720},
+    {name:'Kadongo (Ezatunyumilanga)',start:720,end:960},
+    {name:'Tumbula Ekitone',start:960,end:1080},
+    {name:'Regea Zone (Free Moment)',start:1080,end:1260},
+    {name:'Sunday Mix',start:1260,end:1440,late:true}
+  ];
+  const dayNames=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+  const dayData=d=>d===0?sunday:(d===6?saturday:weekday);
+  const fmt=m=>{let h=Math.floor(m/60),min=m%60,ap=h>=12?'PM':'AM';h=h%12||12;return h+ (min?':'+String(min).padStart(2,'0'):'')+' '+ap;};
+  const range=p=>p.tba?'Time to be announced':fmt(p.start)+' – '+(p.end===1440?'12:00 AM':fmt(p.end));
+  const timeParts=()=>{
+    const parts=new Intl.DateTimeFormat('en-GB',{timeZone:'Africa/Kampala',weekday:'short',hour:'2-digit',minute:'2-digit',hourCycle:'h23'}).formatToParts(new Date());
+    const get=t=>parts.find(x=>x.type===t)?.value;
+    const dayMap={Sun:0,Mon:1,Tue:2,Wed:3,Thu:4,Fri:5,Sat:6};
+    return {day:dayMap[get('weekday')],minute:Number(get('hour'))*60+Number(get('minute'))};
+  };
+  const allDayEvents=()=>{const {day,minute}=timeParts();let events=[];for(let offset=0;offset<8;offset++){const d=(day+offset)%7;dayData(d).forEach(p=>{if(!p.tba)events.push({...p,day:d,offset});});}return {day,minute,events};};
+  function refresh(){
+    const {day,minute,events}=allDayEvents();
+    const current=events.find(p=>p.offset===0&&minute>=p.start&&minute<p.end);
+    const next=events.find(p=>p.offset===0&&p.start>minute)||events.find(p=>p.offset>0);
+    document.getElementById('eat-clock').textContent='UGANDA TIME · '+new Intl.DateTimeFormat('en-GB',{timeZone:'Africa/Kampala',hour:'2-digit',minute:'2-digit',hour12:true}).format(new Date());
+    document.getElementById('on-air-title').textContent=current?current.name:'No scheduled programme';
+    document.getElementById('on-air-time').textContent=current?range(current):'Please stay tuned to SSAZA FM 99.8';
+    document.getElementById('next-title').textContent=next?next.name:'No next programme listed';
+    document.getElementById('next-time').textContent=next?(next.offset?dayNames[next.day]+' · ':'')+range(next):'Check the weekly schedule';
+    const selected=document.querySelector('.day-tab[aria-selected="true"]');render(Number(selected?.dataset.day??(day===0?0:day===6?6:1)),day,minute);
+  }
+  function render(day,today,minute){
+    const list=document.getElementById('schedule-list');list.innerHTML='';
+    dayData(day).forEach(p=>{
+      const active=day===today&&!p.tba&&minute>=p.start&&minute<p.end;
+      const row=document.createElement('div');row.className='schedule-row'+(active?' active':'');
+      const name=document.createElement('strong');name.textContent=p.name+(active?' · ON AIR':'');
+      const time=document.createElement('time');time.textContent=range(p);
+      row.append(name,time);list.appendChild(row);
+    });
+  }
+  document.querySelectorAll('.day-tab').forEach(btn=>btn.addEventListener('click',()=>{
+    document.querySelectorAll('.day-tab').forEach(b=>b.setAttribute('aria-selected',String(b===btn)));
+    const t=timeParts();render(Number(btn.dataset.day),t.day,t.minute);
+  }));
+  refresh();setInterval(refresh,30000);
+})();
+</script>
+
 <script src="//cdn.cloud.caster.fm//widgets/embed.js"></script>
 </body></html>
