@@ -138,19 +138,20 @@ $("voiceForm").addEventListener("submit",async e=>{
   $("submitButton").disabled=true;$("submitButton").textContent="Sending…";
   try{
     const client=window.supabase.createClient(SUPABASE_URL,SUPABASE_ANON_KEY);
-    const ext=(file.name&&file.name.includes(".")?file.name.split(".").pop():((file.type.split("/")[1]||"webm").split(";")[0])).toLowerCase().replace(/[^a-z0-9]/g,"")||"audio";
+    const mimeType=(file.type||"audio/webm").split(";")[0].trim().toLowerCase();
+    const ext=(file.name&&file.name.includes(".")?file.name.split(".").pop():(mimeType.split("/")[1]||"webm")).toLowerCase().replace(/[^a-z0-9]/g,"")||"audio";
     const id=crypto.randomUUID();const path="submissions/"+id+"."+ext;
-    const {error:uploadError}=await client.storage.from(BUCKET).upload(path,file,{contentType:file.type||"application/octet-stream",upsert:false});
+    const {error:uploadError}=await client.storage.from(BUCKET).upload(path,file,{contentType:mimeType,upsert:false});
     if(uploadError)throw uploadError;
     const {error:rowError}=await client.from("voice_submissions").insert({
       name:$("listenerName").value.trim(),location:$("listenerLocation").value.trim(),category:$("category").value,
-      message:$("message").value.trim()||null,file_path:path,mime_type:file.type||null,
+      message:$("message").value.trim()||null,file_path:path,mime_type:mimeType,
       duration_seconds:durationSeconds,status:"pending",consent:true
     });
     if(rowError){await client.storage.from(BUCKET).remove([path]);throw rowError;}
     status("Thank you! Your voice message has been received by SSAZA FM and is waiting for studio review.","ok");
     $("voiceForm").reset();recordingBlob=null;selectedFile=null;chunks=[];durationSeconds=0;clearPreview();$("fileName").textContent="No file selected";$("timer").textContent="00:00 / 02:00";$("recordHint").textContent="Tap the microphone to start recording. Maximum length: 120 seconds.";$("clearButton").disabled=true;updateSubmit();
-  }catch(err){status("We couldn't send your recording. Please check your internet connection and try again. If the problem continues, contact SSAZA FM.","error");}
+  }catch(err){const detail=String(err?.message||err||"Unknown error").slice(0,220);status("We couldn't send your recording: "+detail,"error");}
   finally{$("submitButton").textContent="Send voice message to SSAZA FM";updateSubmit();}
 });
 </script>
