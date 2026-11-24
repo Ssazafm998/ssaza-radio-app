@@ -263,17 +263,15 @@ nav a{color:#F7EEFF}
 .grid .tile strong{color:#FFD84D !important;text-shadow:0 2px 8px rgba(0,0,0,.25)}
 .grid .tile small{color:#FFF7FF !important}
 @keyframes ssazaCardRock{
-  0%,100%{transform:rotateY(-7deg) rotateX(2deg) translateY(0) scale(1)}
-  25%{transform:rotateY(0deg) rotateX(0deg) translateY(-3px) scale(1.012)}
-  50%{transform:rotateY(7deg) rotateX(-2deg) translateY(0) scale(1)}
-  75%{transform:rotateY(0deg) rotateX(0deg) translateY(2px) scale(.995)}
+  0%,100%{transform:perspective(900px) rotateY(-15deg) rotateX(3deg) translateY(0) scale(1)}
+  25%{transform:perspective(900px) rotateY(0deg) rotateX(0deg) translateY(-5px) scale(1.025)}
+  50%{transform:perspective(900px) rotateY(15deg) rotateX(-3deg) translateY(0) scale(1)}
+  75%{transform:perspective(900px) rotateY(0deg) rotateX(0deg) translateY(4px) scale(.99)}
 }
 @media(hover:hover){
   .grid .tile:hover{animation-play-state:paused !important;transform:translateY(-5px) rotateY(0deg) scale(1.025) !important}
 }
-@media(prefers-reduced-motion:reduce){
-  .grid .tile{animation:none !important;transform:none !important}
-}
+/* The user explicitly requested the Explore cards to keep their visible 3D motion. */
 
 </style>
 </head>
