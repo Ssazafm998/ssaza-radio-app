@@ -85,6 +85,8 @@ async function render(){
  }));
  playlistTracks=tracks.filter(x=>x.playUrl);
  if(currentTrackIndex>=playlistTracks.length)currentTrackIndex=-1;
+ if(!playlistTracks.length)currentTrackIndex=-1;
+ updateBroadcastDeck();
  if(!playlistTracks.length){
   $("playlistList").innerHTML='<div class="empty">No approved recordings yet. Approve a submission to add it here.</div>';
   $("nowPlaying").textContent="No approved tracks available.";
@@ -98,8 +100,11 @@ async function render(){
 }
 function updateBroadcastDeck(){
  const playing=currentTrackIndex>=0?playlistTracks[currentTrackIndex]:null;
- $("playPauseTrack").textContent=$("broadcastAudio").paused?"▶ Play":"Ⅱ Pause";
+ const hasTracks=playlistTracks.length>0;
+ ["playPauseTrack","previousTrack","nextTrack","stopTrack"].forEach(id=>$(id).disabled=!hasTracks);
+ $("playPauseTrack").textContent=hasTracks&&!$("broadcastAudio").paused?"Ⅱ Pause":"▶ Play";
  if(playing)$("nowPlaying").textContent="Now selected: "+playing.name+" · "+playing.category+" · "+(currentTrackIndex+1)+" of "+playlistTracks.length;
+ else if(!hasTracks)$("nowPlaying").textContent="No approved tracks available. Approve a listener recording to enable playback.";
 }
 async function playPlaylistTrack(index){
  if(index<0||index>=playlistTracks.length)return;
