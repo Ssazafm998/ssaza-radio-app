@@ -16,7 +16,7 @@ main{max-width:1100px;margin:auto;padding:12px 18px 60px}.hero h1{font-size:clam
 label{display:block;color:var(--gold);font-size:12px;font-weight:800;margin:12px 0 6px}input{width:100%;padding:13px;border-radius:11px;border:1px solid #8e6cad;background:#1e112e;color:white;font-size:15px}button,.btn{border:0;border-radius:999px;padding:11px 16px;background:var(--gold);color:#38244d;font-weight:900;cursor:pointer;font-size:13px}button.secondary{background:#49315f;border:1px solid #9878b7;color:white}button.danger{background:#542637;color:#ffdfe4;border:1px solid #a64c64}button:disabled{opacity:.5;cursor:not-allowed}
 .row{display:flex;align-items:center;gap:9px;flex-wrap:wrap}.row.between{justify-content:space-between}.muted{color:var(--muted);font-size:12px}.hidden{display:none!important}.status{padding:12px;border-radius:11px;font-size:13px;line-height:1.5;margin-top:12px}.ok{background:#123f36;color:#d7ffed;border:1px solid var(--green)}.err{background:#4b202c;color:#ffe3e3;border:1px solid var(--red)}
 .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:18px 0}.stat{background:#2b1a3e;border:1px solid var(--line);border-radius:14px;padding:14px}.stat strong{display:block;color:var(--gold);font-size:25px}.stat span{font-size:11px;color:var(--muted)}
-.filters{display:flex;gap:7px;flex-wrap:wrap;margin:14px 0}.filter{background:#402b57;color:#eee;border:1px solid #765992}.filter.active{background:var(--gold);color:#38244d;border-color:var(--gold)}
+.searchbox{margin:16px 0 10px}.searchbox input{max-width:100%}.playlist{margin-top:20px;border-top:1px solid var(--line);padding-top:18px}.playlist h3{color:var(--gold);margin:0}.track{background:#1e112e;border:1px solid #62457d;border-radius:12px;padding:12px;margin-top:10px}.track strong{display:block;color:#ffe58a;font-size:14px}.track audio{width:100%;margin:8px 0}.filters{display:flex;gap:7px;flex-wrap:wrap;margin:14px 0}.filter{background:#402b57;color:#eee;border:1px solid #765992}.filter.active{background:var(--gold);color:#38244d;border-color:var(--gold)}
 .list{display:grid;gap:12px}.submission{background:#211331;border:1px solid #5c4174;border-radius:15px;padding:15px}.submission h3{margin:0 0 6px;color:var(--gold);font-size:17px}.meta{font-size:12px;color:var(--muted);line-height:1.7}.message{background:#302044;border-radius:10px;padding:11px;margin:10px 0;font-size:13px;line-height:1.5;white-space:pre-wrap}.submission audio{width:100%;margin:8px 0}.pill{display:inline-block;padding:5px 9px;border-radius:99px;font-size:10px;font-weight:900;text-transform:uppercase;background:#49315f;color:#eee}.pill.pending{background:#5b4821;color:#ffe79b}.pill.approved{background:#124b3a;color:#aaffd8}.pill.rejected{background:#572b37;color:#ffc2cc}.pill.archived{background:#3e3b48;color:#ddd}.empty{text-align:center;padding:28px;color:var(--muted);font-size:13px}
 @media(max-width:620px){.stats{grid-template-columns:repeat(2,1fr)}header{padding:14px}main{padding:8px 12px 45px}.panel{padding:14px}}
 </style>
@@ -35,15 +35,15 @@ label{display:block;color:var(--gold);font-size:12px;font-weight:800;margin:12px
 <div class="stat"><strong id="totalCount">0</strong><span>Total messages</span></div><div class="stat"><strong id="pendingCount">0</strong><span>Awaiting review</span></div><div class="stat"><strong id="approvedCount">0</strong><span>Approved</span></div><div class="stat"><strong id="rejectedCount">0</strong><span>Rejected</span></div>
 </div>
 <div class="panel"><div class="row between"><div><h2 style="margin:0;color:var(--gold)">Listener submissions</h2><p class="muted" style="margin:6px 0 0">Newest messages appear first.</p></div><button id="refresh" class="secondary">↻ Refresh</button></div>
-<div class="filters" id="filters"><button class="filter active" data-filter="all">All</button><button class="filter" data-filter="pending">Pending</button><button class="filter" data-filter="approved">Approved</button><button class="filter" data-filter="rejected">Rejected</button><button class="filter" data-filter="archived">Archived</button></div>
-<div id="list" class="list"><div class="empty">Sign in to load submissions.</div></div><div id="dashStatus" class="status hidden"></div></div>
+<div class="searchbox"><label for="searchInput">Search by listener, location or message</label><input id="searchInput" type="search" placeholder="Type a name, place or keyword…"></div><div class="filters" id="filters"><button class="filter active" data-filter="all">All</button><button class="filter" data-filter="pending">Pending</button><button class="filter" data-filter="approved">Approved</button><button class="filter" data-filter="rejected">Rejected</button><button class="filter" data-filter="archived">Archived</button></div>
+<div id="list" class="list"><div class="empty">Sign in to load submissions.</div></div><section class="playlist"><div class="row between"><div><h3>🎧 Broadcast-ready playlist</h3><p class="muted">Approved recordings only. Review each track before putting it on air.</p></div><span class="pill approved" id="playlistCount">0 tracks</span></div><div id="playlistList"><div class="empty">Approved recordings will appear here.</div></div></section><div id="dashStatus" class="status hidden"></div></div>
 </section>
 </main>
 <script>
 const SUPABASE_URL="https://hdcajbocoeawospstggb.supabase.co";
 const SUPABASE_KEY="sb_publishable_tB0pW-fU9hMMHQsUdgx0yQ_GiQpD2Tu";
 const client=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
-let submissions=[],filter="all";
+let submissions=[],filter="all",searchTerm="";
 const $=id=>document.getElementById(id);
 function showStatus(el,msg,kind){el.textContent=msg;el.className="status "+kind;}
 function safe(value){return String(value??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
@@ -52,9 +52,42 @@ $("loginForm").addEventListener("submit",async e=>{e.preventDefault();$("loginBu
 $("signOut").addEventListener("click",async()=>{await client.auth.signOut();submissions=[];setSignedIn(false);$("list").innerHTML='<div class="empty">Sign in to load submissions.</div>';});
 $("refresh").addEventListener("click",loadSubmissions);
 $("filters").addEventListener("click",e=>{const b=e.target.closest("button[data-filter]");if(!b)return;filter=b.dataset.filter;document.querySelectorAll(".filter").forEach(x=>x.classList.toggle("active",x===b));render();});
+$("searchInput").addEventListener("input",e=>{searchTerm=e.target.value.trim().toLowerCase();render();});
 async function loadSubmissions(){ $("list").innerHTML='<div class="empty">Loading listener messages…</div>';try{const {data,error}=await client.from("voice_submissions").select("id,name,location,category,message,file_path,mime_type,duration_seconds,status,created_at").order("created_at",{ascending:false}).limit(100);if(error)throw error;submissions=data||[];updateStats();render();$("dashStatus").classList.add("hidden");}catch(err){$("list").innerHTML="";showStatus($("dashStatus"),err.message||"Could not load submissions.","err");$("dashStatus").classList.remove("hidden");}}
 function updateStats(){$("totalCount").textContent=submissions.length;$("pendingCount").textContent=submissions.filter(x=>x.status==="pending").length;$("approvedCount").textContent=submissions.filter(x=>x.status==="approved").length;$("rejectedCount").textContent=submissions.filter(x=>x.status==="rejected").length;}
-async function render(){const rows=submissions.filter(x=>filter==="all"||x.status===filter);if(!rows.length){$("list").innerHTML='<div class="empty">No messages in this view yet.</div>';return;}const html=await Promise.all(rows.map(async x=>{const {data,error}=await client.storage.from("voice-notes").createSignedUrl(x.file_path,3600);const audio=error?"<p class='muted'>Audio link unavailable. Refresh or check staff storage permissions.</p>":'<audio controls preload="none" src="'+safe(data.signedUrl)+'"></audio>';return '<article class="submission"><div class="row between"><h3>'+safe(x.name)+'</h3><span class="pill '+safe(x.status)+'">'+safe(x.status)+'</span></div><div class="meta">📍 '+safe(x.location)+' · '+safe(x.category)+' · '+safe(x.duration_seconds)+' sec<br>🕒 '+safe(new Date(x.created_at).toLocaleString())+'</div>'+(x.message?'<div class="message">'+safe(x.message)+'</div>':'')+audio+'<div class="row"><button class="secondary" data-action="approved" data-id="'+safe(x.id)+'">Approve</button><button class="danger" data-action="rejected" data-id="'+safe(x.id)+'">Reject</button><button class="secondary" data-action="archived" data-id="'+safe(x.id)+'">Archive</button></div></article>';}));$("list").innerHTML=html.join("");}
+async function makeAudioLinks(x){
+ const {data:playData,error:playError}=await client.storage.from("voice-notes").createSignedUrl(x.file_path,3600);
+ const filename=("ssaza-"+(x.name||"listener").toLowerCase().replace(/[^a-z0-9]+/g,"-")+"-"+x.id).slice(0,90)+".webm";
+ const {data:downloadData,error:downloadError}=await client.storage.from("voice-notes").createSignedUrl(x.file_path,3600,{download:filename});
+ return {playUrl:playError?null:playData.signedUrl,downloadUrl:downloadError?null:downloadData.signedUrl};
+}
+function matchesSearch(x){
+ if(!searchTerm)return true;
+ return [x.name,x.location,x.category,x.message,x.status].some(v=>String(v||"").toLowerCase().includes(searchTerm));
+}
+async function render(){
+ const rows=submissions.filter(x=>(filter==="all"||x.status===filter)&&matchesSearch(x));
+ const approved=submissions.filter(x=>x.status==="approved"&&matchesSearch(x));
+ $("playlistCount").textContent=approved.length+" tracks";
+ if(!rows.length){$("list").innerHTML='<div class="empty">No matching messages in this view.</div>';}
+ else{
+  const html=await Promise.all(rows.map(async x=>{
+   const links=await makeAudioLinks(x);
+   const audio=links.playUrl?'<audio controls preload="none" src="'+safe(links.playUrl)+'"></audio>':"<p class='muted'>Audio link unavailable. Refresh or check staff storage permissions.</p>";
+   const download=links.downloadUrl?'<a href="'+safe(links.downloadUrl)+'" download style="display:inline-block;text-decoration:none"><button type="button" class="secondary">⬇ Download recording</button></a>':'';
+   return '<article class="submission"><div class="row between"><h3>'+safe(x.name)+'</h3><span class="pill '+safe(x.status)+'">'+safe(x.status)+'</span></div><div class="meta">📍 '+safe(x.location)+' · '+safe(x.category)+' · '+safe(x.duration_seconds)+' sec<br>🕒 '+safe(new Date(x.created_at).toLocaleString())+'</div>'+(x.message?'<div class="message">'+safe(x.message)+'</div>':'')+audio+'<div class="row">'+download+'<button class="secondary" data-action="approved" data-id="'+safe(x.id)+'">Approve</button><button class="danger" data-action="rejected" data-id="'+safe(x.id)+'">Reject</button><button class="secondary" data-action="archived" data-id="'+safe(x.id)+'">Archive</button></div></article>';
+  }));
+  $("list").innerHTML=html.join("");
+ }
+ if(!approved.length){$("playlistList").innerHTML='<div class="empty">No approved recordings yet. Approve a submission to add it here.</div>';}
+ else{
+  const tracks=await Promise.all(approved.map(async(x,i)=>{
+   const links=await makeAudioLinks(x);
+   return '<div class="track"><div class="row between"><strong>'+String(i+1)+'. '+safe(x.name)+' — '+safe(x.category)+'</strong><span class="pill approved">Approved</span></div><div class="meta">'+safe(x.location)+' · '+safe(x.duration_seconds)+' sec · '+safe(new Date(x.created_at).toLocaleString())+'</div>'+(links.playUrl?'<audio controls preload="none" src="'+safe(links.playUrl)+'"></audio>':"<p class='muted'>Audio unavailable. Refresh to try again.</p>")+(links.downloadUrl?'<a href="'+safe(links.downloadUrl)+'" download style="display:inline-block;text-decoration:none"><button type="button" class="secondary">⬇ Download track</button></a>':'')+'</div>';
+  }));
+  $("playlistList").innerHTML=tracks.join("");
+ }
+}
 $("list").addEventListener("click",async e=>{const b=e.target.closest("button[data-action]");if(!b)return;b.disabled=true;try{const {error}=await client.from("voice_submissions").update({status:b.dataset.action}).eq("id",b.dataset.id);if(error)throw error;await loadSubmissions();}catch(err){showStatus($("dashStatus"),err.message||"Status update failed.","err");$("dashStatus").classList.remove("hidden");b.disabled=false;}});
 client.auth.onAuthStateChange(async(_event,session)=>{if(session){setSignedIn(true);const {data}=await client.from("voice_staff").select("user_id").maybeSingle();if(data)await loadSubmissions();else{await client.auth.signOut();setSignedIn(false);}}else setSignedIn(false);});
 (async()=>{const {data:{session}}=await client.auth.getSession();if(session){const {data}=await client.from("voice_staff").select("user_id").maybeSingle();if(data){setSignedIn(true);await loadSubmissions();}else await client.auth.signOut();}})();
