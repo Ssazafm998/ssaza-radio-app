@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#624080">
+<meta name="theme-color" content="#111B3D">
 <meta name="description" content="Listen to SSAZA FM 99.8 live online, broadcasting from Bukwiri, Kyankwanzi District, Uganda. Music, news and entertainment. Eddoboozi ly'amunassingo.">
 <meta name="robots" content="index,follow">
 <link rel="canonical" href="https://ssazafm998.github.io/ssaza-radio-app/">
@@ -421,6 +421,55 @@ nav a{color:#F7EEFF}
   #schedule-list .schedule-track{animation:none !important}
   #schedule-list .schedule-loop-group[aria-hidden="true"]{display:none}
 }
+
+
+/* SSAZA FM official midnight-blue colourway: replace purple surfaces, retain yellow identity */
+:root{
+  --blue:#111B3D;
+  --blue2:#1B2B59;
+  --yellow:#FFD84D;
+  --white:#F8FAFF;
+  --muted:#DCE5FF;
+}
+html,body{background:#111B3D !important;color:#F8FAFF}
+body{background:linear-gradient(180deg,#111B3D 0%,#172754 55%,#101A39 100%) !important}
+.live,.program-guide,.news-feature,.about,.show-card,.tile{
+  background:linear-gradient(145deg,#20366D,#14234D) !important;
+  border-color:#7892D5 !important;
+  color:#F8FAFF !important;
+}
+.grid{
+  background:linear-gradient(145deg,#0B1533 0%,#152653 52%,#0B1533 100%) !important;
+  border-color:#91A8E8 !important;
+  box-shadow:inset 0 0 28px rgba(130,160,235,.14),0 14px 34px rgba(3,8,24,.38) !important;
+}
+.grid .tile,.grid .tile:nth-child(1),.grid .tile:nth-child(2),
+.grid .tile:nth-child(3),.grid .tile:nth-child(4){
+  background:linear-gradient(135deg,#294786,#172B5C 78%) !important;
+  border-color:#9BB4F0 !important;
+  color:#F8FAFF !important;
+  box-shadow:0 0 16px rgba(95,137,224,.22),0 8px 22px rgba(3,8,24,.32) !important;
+}
+.grid .tile strong,.brand,.hero h1,.player-title,.section-title,
+.guide-heading h2,.news-feature .news-kicker,.news-feature h3,
+.program-guide h2,.about h2{color:#FFD84D !important}
+.grid .tile small,.tag,.hero p,.player-sub,.hint,.show-card span,
+.schedule-row time,.guide-note,.news-feature .news-meta,footer{color:#DCE5FF !important}
+.grid .tile::after{background:linear-gradient(90deg,transparent,rgba(190,210,255,.24),transparent) !important}
+nav{background:rgba(12,23,54,.98) !important;border-top-color:#7892D5 !important}
+nav a{color:#E5ECFF !important}
+.announcement-ticker{background:rgba(12,23,54,.7) !important;border-color:#7892D5 !important;color:#DCE5FF !important}
+.day-tab{background:#20366D !important;border-color:#7892D5 !important;color:#F8FAFF !important}
+.day-tab[aria-selected="true"]{background:#FFD84D !important;border-color:#FFD84D !important;color:#111B3D !important}
+.schedule-row,.schedule-row.active,#schedule-list .schedule-row{
+  background:linear-gradient(110deg,#20366D,#294786,#20366D) !important;
+  border-color:#7892D5 !important;
+  color:#F8FAFF !important;
+}
+#schedule-list .schedule-row.active{border-color:#FFD84D !important}
+.btn,.news-feature .news-read{background:#FFD84D !important;color:#111B3D !important}
+.live{box-shadow:0 12px 32px rgba(3,8,24,.38) !important}
+.program-guide,.news-feature{box-shadow:0 10px 28px rgba(3,8,24,.32) !important}
 
 </style>
 </head>
