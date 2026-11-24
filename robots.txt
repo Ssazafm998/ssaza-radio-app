@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://ssazafm998.github.io/ssaza-radio-app/sitemap.xml
