@@ -368,6 +368,60 @@ nav a{color:#F7EEFF}
   50%{letter-spacing:.25px}
 }
 
+
+/* Continuous vertical programme credits: two matching groups create a seamless loop */
+#schedule-list{
+  display:block !important;
+  height: min(460px, 58vh);
+  min-height:300px;
+  overflow:hidden !important;
+  position:relative;
+  padding:2px 2px 4px;
+  -webkit-mask-image:linear-gradient(to bottom,transparent 0%,#000 7%,#000 93%,transparent 100%);
+  mask-image:linear-gradient(to bottom,transparent 0%,#000 7%,#000 93%,transparent 100%);
+}
+#schedule-list .schedule-track{
+  display:flex;
+  flex-direction:column;
+  gap:0;
+  will-change:transform;
+  animation:ssazaCreditsRoll 32s linear infinite;
+}
+#schedule-list .schedule-loop-group{
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+  padding-bottom:8px;
+  flex:0 0 auto;
+}
+#schedule-list .schedule-row,
+#schedule-list .schedule-row.active{
+  animation:none !important;
+  transform:none !important;
+  filter:none !important;
+  flex:0 0 auto;
+  min-height:64px;
+  background:linear-gradient(110deg,#60427F,#79599A,#60427F) !important;
+  border:1px solid #C4A6EA !important;
+  box-shadow:0 4px 12px rgba(32,12,48,.16) !important;
+}
+#schedule-list .schedule-row.active{
+  background:linear-gradient(110deg,#795A83,#735080) !important;
+  border:2px solid #FFD84D !important;
+  box-shadow:inset 4px 0 #FFD84D,0 0 14px rgba(255,216,77,.24) !important;
+}
+@keyframes ssazaCreditsRoll{
+  from{transform:translateY(0)}
+  to{transform:translateY(-50%)}
+}
+#schedule-list:hover .schedule-track,
+#schedule-list:focus-within .schedule-track{animation-play-state:paused}
+@media(prefers-reduced-motion:reduce){
+  #schedule-list{height:auto;max-height:460px;overflow-y:auto !important;mask-image:none;-webkit-mask-image:none}
+  #schedule-list .schedule-track{animation:none !important}
+  #schedule-list .schedule-loop-group[aria-hidden="true"]{display:none}
+}
+
 </style>
 </head>
 <body>
@@ -501,15 +555,28 @@ nav a{color:#F7EEFF}
     document.getElementById('next-time').textContent=next?(next.offset?dayNames[next.day]+' · ':'')+range(next):'Check the weekly schedule';
     const selected=document.querySelector('.day-tab[aria-selected="true"]');render(Number(selected?.dataset.day??(day===0?0:day===6?6:1)),day,minute);
   }
+  const scheduleScrollStartedAt=Date.now();
   function render(day,today,minute){
-    const list=document.getElementById('schedule-list');list.innerHTML='';
-    dayData(day).forEach(p=>{
-      const active=day===today&&!p.tba&&minute>=p.start&&minute<p.end;
-      const row=document.createElement('div');row.className='schedule-row'+(active?' active':'');
-      const name=document.createElement('strong');name.textContent=p.name+(active?' · ON AIR':'');
-      const time=document.createElement('time');time.textContent=range(p);
-      row.append(name,time);list.appendChild(row);
-    });
+    const list=document.getElementById('schedule-list');
+    const programmes=dayData(day);
+    const track=document.createElement('div');track.className='schedule-track';
+    function makeGroup(isClone){
+      const group=document.createElement('div');
+      group.className='schedule-loop-group';
+      if(isClone) group.setAttribute('aria-hidden','true');
+      programmes.forEach(p=>{
+        const active=day===today&&!p.tba&&minute>=p.start&&minute<p.end;
+        const row=document.createElement('div');row.className='schedule-row'+(active?' active':'');
+        const name=document.createElement('strong');name.textContent=p.name+(active?' · ON AIR':'');
+        const time=document.createElement('time');time.textContent=range(p);
+        row.append(name,time);group.appendChild(row);
+      });
+      return group;
+    }
+    track.append(makeGroup(false),makeGroup(true));
+    const duration=32000;
+    track.style.animationDelay='-'+((Date.now()-scheduleScrollStartedAt)%duration)+'ms';
+    list.replaceChildren(track);
   }
   document.querySelectorAll('.day-tab').forEach(btn=>btn.addEventListener('click',()=>{
     document.querySelectorAll('.day-tab').forEach(b=>b.setAttribute('aria-selected',String(b===btn)));
