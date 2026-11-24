@@ -336,6 +336,38 @@ nav a{color:#F7EEFF}
   .schedule-row,.schedule-row.active,.schedule-row::after{animation:none !important;transform:none !important}
 }
 
+
+/* High-visibility moving programme list: each dynamically-rendered row gets its own motion */
+#schedule-list .schedule-row{
+  animation:ssazaRowGlide 3.2s ease-in-out infinite !important;
+  will-change:transform,filter;
+  position:relative;
+}
+#schedule-list .schedule-row:nth-child(2n){animation-delay:-1.6s !important}
+#schedule-list .schedule-row:nth-child(3n){animation-delay:-.8s !important}
+#schedule-list .schedule-row strong,
+#schedule-list .schedule-row time{
+  animation:ssazaRowText 3.2s ease-in-out infinite;
+}
+#schedule-list .schedule-row:nth-child(2n) strong,
+#schedule-list .schedule-row:nth-child(2n) time{animation-delay:-1.6s}
+#schedule-list .schedule-row.active{
+  animation:ssazaRowActive 2.4s ease-in-out infinite !important;
+  border:1.5px solid #FFD84D !important;
+}
+@keyframes ssazaRowGlide{
+  0%,100%{transform:translate3d(0,0,0) scale(1);filter:brightness(1)}
+  50%{transform:translate3d(12px,-3px,0) scale(1.012);filter:brightness(1.16)}
+}
+@keyframes ssazaRowActive{
+  0%,100%{transform:translate3d(0,0,0) scale(1);box-shadow:inset 4px 0 #FFD84D,0 0 5px rgba(255,216,77,.18)}
+  50%{transform:translate3d(12px,-3px,0) scale(1.018);box-shadow:inset 4px 0 #FFD84D,0 0 22px rgba(255,216,77,.55)}
+}
+@keyframes ssazaRowText{
+  0%,100%{letter-spacing:0}
+  50%{letter-spacing:.25px}
+}
+
 </style>
 </head>
 <body>
