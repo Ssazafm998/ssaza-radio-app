@@ -653,6 +653,22 @@ section[aria-label="Latest news"] .news-feature .news-read{
 .announcement-track .ticker-facebook-link{color:#FFD84D;text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:3px;font-weight:800;pointer-events:auto}
 .announcement-track .ticker-facebook-link:focus-visible{outline:2px solid #FFD84D;outline-offset:3px;border-radius:3px}
 
+
+/* Readable, tappable contact and location links inside the existing moving ticker */
+.announcement-track .ticker-contact-link{display:inline-block;position:relative;z-index:5;color:#FFD84D !important;font-weight:800;text-decoration:underline;text-underline-offset:3px;padding:3px 2px;pointer-events:auto;touch-action:manipulation}
+.announcement-track .ticker-map-link{display:inline-block;position:relative;z-index:5;color:#FFD84D !important;text-decoration:none;padding:3px 2px;pointer-events:auto;touch-action:manipulation}
+.announcement-track .ticker-map-link strong{color:#FFD84D !important}
+
+
+/* Dedicated sponsor and partner showcase replacing the old contact-button cluster */
+.sponsors-section{margin-top:22px;padding-top:18px;border-top:1px solid #D0B8F2}
+.sponsors-heading h2{margin:0;color:var(--yellow);font-size:18px;letter-spacing:.3px}
+.sponsors-heading p{margin:7px 0 13px;color:#F0E5FF;font-size:12px;line-height:1.5}
+.sponsors-placeholder{min-height:112px;padding:18px 14px;border:1px dashed #D0B8F2;border-radius:15px;background:linear-gradient(145deg,rgba(61,40,88,.72),rgba(86,56,115,.55));display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:8px}
+.sponsors-placeholder strong{color:#FFD84D;font-size:14px;letter-spacing:.8px}
+.sponsors-placeholder span{color:#F0E5FF;font-size:11px;line-height:1.45}
+.sponsors-placeholder a{display:inline-block;margin-top:4px;padding:10px 15px;border-radius:999px;background:#FFD84D;color:#39254F;text-decoration:none;font-size:11px;font-weight:800}
+
 </style>
 </head>
 <body>
@@ -667,11 +683,15 @@ section[aria-label="Latest news"] .news-feature .news-read{
     <span><strong>DON'T MISS ENSASAGE RENEWED!</strong> 5 December at Ntwetwe Mukisawe</span><span class="ticker-separator">•</span>
     <span><strong>CELEBRATING 4 YEARS</strong> of seamless broadcast!</span><span class="ticker-separator">•</span>
     <span>Live performances by <strong>King Saha, Henry Mwanje, Robert Rota, Reachel Namiro</strong> and many more</span><span class="ticker-separator">•</span>
+    <span><strong>CALL OUR HEAD OFFICE:</strong> <a class="ticker-contact-link" href="tel:+256758672796">0758 672 796</a> <strong>OR</strong> <a class="ticker-contact-link" href="tel:+256783895982">0783 895 982</a> <strong>OR</strong> <a class="ticker-contact-link" href="tel:+256794588343">0794 588 343</a></span><span class="ticker-separator">•</span>
+    <span><a class="ticker-map-link" href="https://www.google.com/maps?q=1.117117,31.591590" target="_blank" rel="noopener noreferrer"><strong>📍 FIND OUR PHYSICAL LOCATION – OPEN GOOGLE MAPS ↗</strong></a></span><span class="ticker-separator">•</span>
     <span><strong>FIND US:</strong> Bukwiri Town Council Road</span><span class="ticker-separator">•</span>
     <span><strong>FOLLOW SSAZA FM 99.8</strong> on TikTok, <a class="ticker-facebook-link" href="https://www.facebook.com/share/19oKQCekwQ/" target="_blank" rel="noopener noreferrer" aria-label="Visit SSAZA FM on Facebook" style="display:inline-block;position:relative;z-index:5;padding:5px 10px;margin:0 3px;border-radius:7px;background:#1877F2;color:#FFFFFF !important;text-decoration:none !important;font-weight:800;line-height:1.3;pointer-events:auto;touch-action:manipulation">f&nbsp; Facebook ↗</a> and YouTube</span><span class="ticker-separator">•</span>
     <span><strong>DON'T MISS ENSASAGE RENEWED!</strong> 5 December at Ntwetwe Mukisawe</span><span class="ticker-separator">•</span>
     <span><strong>CELEBRATING 4 YEARS</strong> of seamless broadcast!</span><span class="ticker-separator">•</span>
     <span>Live performances by <strong>King Saha, Henry Mwanje, Robert Rota, Reachel Namiro</strong> and many more</span><span class="ticker-separator">•</span>
+    <span><strong>CALL OUR HEAD OFFICE:</strong> <a class="ticker-contact-link" href="tel:+256758672796">0758 672 796</a> <strong>OR</strong> <a class="ticker-contact-link" href="tel:+256783895982">0783 895 982</a> <strong>OR</strong> <a class="ticker-contact-link" href="tel:+256794588343">0794 588 343</a></span><span class="ticker-separator">•</span>
+    <span><a class="ticker-map-link" href="https://www.google.com/maps?q=1.117117,31.591590" target="_blank" rel="noopener noreferrer"><strong>📍 FIND OUR PHYSICAL LOCATION – OPEN GOOGLE MAPS ↗</strong></a></span><span class="ticker-separator">•</span>
   </div>
 </div>
 </section>
@@ -732,7 +752,17 @@ section[aria-label="Latest news"] .news-feature .news-read{
 </section>
 <h2 class="section-title">About Us</h2>
 <section class="about">SSAZA FM 99.8 is your home of entertainment, information, music and community connection, broadcasting from Bukwiri, Kyankwanzi District, Uganda. We bring you Ugandan music, African rhythms, engaging discussions and community updates.
-<div class="actions"><a class="btn" href="https://wa.me/256743147216" target="_blank" rel="noopener">WhatsApp the station</a><a class="btn" href="tel:+256758672796">Office: 0758 672 796</a><a class="btn" href="tel:+256783895982">Office: 0783 895 982</a><a class="btn" href="tel:+256794588343">Office: 0794 588 343</a><a class="btn" href="https://www.google.com/maps?q=1.117117,31.591590" target="_blank" rel="noopener">📍 Find Our Studio</a><a class="btn" href="https://ssazafm998.ismyradio.com/" target="_blank" rel="noopener">Visit website</a><a class="btn" href="#program-guide">View schedule</a></div></section>
+<section class="sponsors-section" id="sponsors" aria-label="Sponsors and partners">
+  <div class="sponsors-heading">
+    <h2>🤝 SPONSORS &amp; PARTNERS</h2>
+    <p>Supporting community radio, local voices and great entertainment.</p>
+  </div>
+  <div class="sponsors-placeholder">
+    <strong>YOUR BRAND COULD BE HERE</strong>
+    <span>Partner with SSAZA FM 99.8 and reach our listeners.</span>
+    <a href="https://wa.me/256743147216" target="_blank" rel="noopener noreferrer">ADVERTISE WITH US ↗</a>
+  </div>
+</section></section>
 <footer>© 2026 SSAZA FM 99.8 · Eddoboozi ly'amunassingo</footer>
 </main>
 <nav><a href="#listen"><span>📻</span>Listen</a><a href="app-story.html"><span>📰</span>News</a><a href="#program-guide"><span>🗓️</span>Schedule</a><a href="#listen"><span>ℹ️</span>About</a></nav>
