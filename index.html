@@ -286,6 +286,56 @@ nav a{color:#F7EEFF}
   animation-iteration-count:infinite !important;
   animation-fill-mode:both !important;
 }
+
+/* Programme schedule: continuous gentle flowing motion, with readable staggered highlights */
+.schedule-list{position:relative;overflow:hidden;padding:3px 2px 6px}
+.schedule-row{
+  position:relative;
+  overflow:hidden;
+  transform:translateX(0);
+  animation:ssazaProgrammeFlow 5.8s ease-in-out infinite;
+  will-change:transform,box-shadow;
+  transition:border-color .25s ease,background .25s ease;
+}
+.schedule-row:nth-child(2n){animation-delay:-2.9s}
+.schedule-row:nth-child(3n){animation-delay:-1.45s}
+.schedule-row::after{
+  content:"";
+  position:absolute;
+  top:-20%;
+  bottom:-20%;
+  left:-55%;
+  width:32%;
+  pointer-events:none;
+  transform:skewX(-20deg);
+  background:linear-gradient(90deg,transparent,rgba(233,223,255,.20),transparent);
+  animation:ssazaProgrammeShimmer 7s ease-in-out infinite;
+}
+.schedule-row:nth-child(2n)::after{animation-delay:-3.5s}
+.schedule-row:nth-child(3n)::after{animation-delay:-1.8s}
+.schedule-row.active{
+  animation:ssazaProgrammeActive 3.8s ease-in-out infinite;
+  border-color:#FFD84D;
+}
+@keyframes ssazaProgrammeFlow{
+  0%,100%{transform:translateX(0);box-shadow:0 3px 10px rgba(28,12,45,.10)}
+  50%{transform:translateX(5px);box-shadow:0 7px 16px rgba(28,12,45,.22)}
+}
+@keyframes ssazaProgrammeActive{
+  0%,100%{transform:translateX(0);box-shadow:inset 3px 0 #FFD84D,0 0 0 rgba(255,216,77,0)}
+  50%{transform:translateX(5px);box-shadow:inset 3px 0 #FFD84D,0 0 15px rgba(255,216,77,.20)}
+}
+@keyframes ssazaProgrammeShimmer{
+  0%,55%{left:-55%}
+  100%{left:130%}
+}
+@media(hover:hover){
+  .schedule-row:hover{animation-play-state:paused;transform:translateX(7px);border-color:#FFD84D}
+}
+@media(prefers-reduced-motion:reduce){
+  .schedule-row,.schedule-row.active,.schedule-row::after{animation:none !important;transform:none !important}
+}
+
 </style>
 </head>
 <body>
