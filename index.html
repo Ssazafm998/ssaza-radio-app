@@ -93,6 +93,15 @@ footer{text-align:center;color:#aab8ff;font-size:10px;padding:24px 0 8px}@media(
 .news-feature .news-read{display:inline-block;margin-top:14px;background:var(--yellow);color:var(--blue);font-weight:800;font-size:12px;padding:9px 14px;border-radius:999px}
 
 
+
+/* Sponsor poster gallery */
+.sponsors-gallery{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin:18px 0}
+.sponsor-card{min-width:0;overflow:hidden;border:1px solid #D0B8F2;border-radius:16px;background:linear-gradient(145deg,#7959A0,#563873);padding:10px;text-align:center;box-shadow:0 10px 24px #24153255}
+.sponsor-card img{display:block;width:100%;height:220px;object-fit:contain;border-radius:10px;background:#241039}
+.sponsor-card h3{font-size:13px;line-height:1.35;color:#FFD84D;margin:11px 4px 5px}
+.sponsor-card span{display:block;color:#F0E5FF;font-size:11px;font-weight:700;letter-spacing:.7px;text-transform:uppercase}
+@media(max-width:480px){.sponsors-gallery{grid-template-columns:1fr}.sponsor-card img{height:auto;max-height:360px}}
+
 /* SSAZA FM vivid soft-purple primary theme; signature yellow wording retained */
 :root{
   --blue:#624080;
@@ -749,6 +758,18 @@ section[aria-label="Latest news"] .news-feature .news-read{
   <div class="sponsors-heading">
     <h2>🤝 SPONSORS &amp; PARTNERS</h2>
     <p>Supporting community radio, local voices and great entertainment.</p>
+  </div>
+  <div class="sponsors-gallery">
+    <article class="sponsor-card">
+      <img src="images/file_00000000f05481f4aaaf23d87f4a0e2a.png" alt="Alnaya Transport Services sponsor poster" loading="lazy">
+      <h3>ALNAYA TRANSPORT SERVICES</h3>
+      <span>Official Sponsor</span>
+    </article>
+    <article class="sponsor-card">
+      <img src="images/IMG-20261106-WA0000.jpg" alt="Remote Kombucha sponsor poster" loading="lazy">
+      <h3>REMOTE KOMBUCHA</h3>
+      <span>Official Sponsor</span>
+    </article>
   </div>
   <div class="sponsors-placeholder">
     <strong>YOUR BRAND COULD BE HERE</strong>
