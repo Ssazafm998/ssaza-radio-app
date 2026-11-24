@@ -14,7 +14,7 @@ create table if not exists public.voice_submissions (
   file_path text not null unique,
   mime_type text,
   duration_seconds integer not null check (duration_seconds between 1 and 120),
-  status text not null default 'pending' check (status = 'pending'),
+  status text not null default 'pending' check (status in ('pending','approved','rejected','archived')),
   consent boolean not null default false check (consent = true),
   created_at timestamptz not null default now()
 );
