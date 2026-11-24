@@ -16,7 +16,7 @@ main{max-width:1100px;margin:auto;padding:12px 18px 60px}.hero h1{font-size:clam
 label{display:block;color:var(--gold);font-size:12px;font-weight:800;margin:12px 0 6px}input{width:100%;padding:13px;border-radius:11px;border:1px solid #8e6cad;background:#1e112e;color:white;font-size:15px}button,.btn{border:0;border-radius:999px;padding:11px 16px;background:var(--gold);color:#38244d;font-weight:900;cursor:pointer;font-size:13px}button.secondary{background:#49315f;border:1px solid #9878b7;color:white}button.danger{background:#542637;color:#ffdfe4;border:1px solid #a64c64}button:disabled{opacity:.5;cursor:not-allowed}
 .row{display:flex;align-items:center;gap:9px;flex-wrap:wrap}.row.between{justify-content:space-between}.muted{color:var(--muted);font-size:12px}.hidden{display:none!important}.status{padding:12px;border-radius:11px;font-size:13px;line-height:1.5;margin-top:12px}.ok{background:#123f36;color:#d7ffed;border:1px solid var(--green)}.err{background:#4b202c;color:#ffe3e3;border:1px solid var(--red)}
 .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:18px 0}.stat{background:#2b1a3e;border:1px solid var(--line);border-radius:14px;padding:14px}.stat strong{display:block;color:var(--gold);font-size:25px}.stat span{font-size:11px;color:var(--muted)}
-.searchbox{margin:16px 0 10px}.searchbox input{max-width:100%}.playlist{margin-top:20px;border-top:1px solid var(--line);padding-top:18px}.playlist h3{color:var(--gold);margin:0}.track{background:#1e112e;border:1px solid #62457d;border-radius:12px;padding:12px;margin-top:10px}.track strong{display:block;color:#ffe58a;font-size:14px}.track audio{width:100%;margin:8px 0}.filters{display:flex;gap:7px;flex-wrap:wrap;margin:14px 0}.filter{background:#402b57;color:#eee;border:1px solid #765992}.filter.active{background:var(--gold);color:#38244d;border-color:var(--gold)}
+.searchbox{margin:16px 0 10px}.searchbox input{max-width:100%}.playlist{margin-top:20px;border-top:1px solid var(--line);padding-top:18px}.playlist h3{color:var(--gold);margin:0}.track{background:#1e112e;border:1px solid #62457d;border-radius:12px;padding:12px;margin-top:10px}.track strong{display:block;color:#ffe58a;font-size:14px}.track.active{border-color:var(--gold);box-shadow:0 0 0 1px #ffd84d55}.broadcast-console{background:#1b1028;border:1px solid #8b6aa9;border-radius:14px;padding:14px;margin:14px 0}.broadcast-console h4{color:var(--gold);margin:0 0 8px}.broadcast-console audio{width:100%;margin:10px 0}.now-playing{color:var(--muted);font-size:12px;line-height:1.5;min-height:18px}.filters{display:flex;gap:7px;flex-wrap:wrap;margin:14px 0}.filter{background:#402b57;color:#eee;border:1px solid #765992}.filter.active{background:var(--gold);color:#38244d;border-color:var(--gold)}
 .list{display:grid;gap:12px}.submission{background:#211331;border:1px solid #5c4174;border-radius:15px;padding:15px}.submission h3{margin:0 0 6px;color:var(--gold);font-size:17px}.meta{font-size:12px;color:var(--muted);line-height:1.7}.message{background:#302044;border-radius:10px;padding:11px;margin:10px 0;font-size:13px;line-height:1.5;white-space:pre-wrap}.submission audio{width:100%;margin:8px 0}.pill{display:inline-block;padding:5px 9px;border-radius:99px;font-size:10px;font-weight:900;text-transform:uppercase;background:#49315f;color:#eee}.pill.pending{background:#5b4821;color:#ffe79b}.pill.approved{background:#124b3a;color:#aaffd8}.pill.rejected{background:#572b37;color:#ffc2cc}.pill.archived{background:#3e3b48;color:#ddd}.empty{text-align:center;padding:28px;color:var(--muted);font-size:13px}
 @media(max-width:620px){.stats{grid-template-columns:repeat(2,1fr)}header{padding:14px}main{padding:8px 12px 45px}.panel{padding:14px}}
 </style>
@@ -36,14 +36,14 @@ label{display:block;color:var(--gold);font-size:12px;font-weight:800;margin:12px
 </div>
 <div class="panel"><div class="row between"><div><h2 style="margin:0;color:var(--gold)">Listener submissions</h2><p class="muted" style="margin:6px 0 0">Newest messages appear first.</p></div><button id="refresh" class="secondary">↻ Refresh</button></div>
 <div class="searchbox"><label for="searchInput">Search by listener, location or message</label><input id="searchInput" type="search" placeholder="Type a name, place or keyword…"></div><div class="filters" id="filters"><button class="filter active" data-filter="all">All</button><button class="filter" data-filter="pending">Pending</button><button class="filter" data-filter="approved">Approved</button><button class="filter" data-filter="rejected">Rejected</button><button class="filter" data-filter="archived">Archived</button></div>
-<div id="list" class="list"><div class="empty">Sign in to load submissions.</div></div><section class="playlist"><div class="row between"><div><h3>🎧 Broadcast-ready playlist</h3><p class="muted">Approved recordings only. Review each track before putting it on air.</p></div><span class="pill approved" id="playlistCount">0 tracks</span></div><div id="playlistList"><div class="empty">Approved recordings will appear here.</div></div></section><div id="dashStatus" class="status hidden"></div></div>
+<div id="list" class="list"><div class="empty">Sign in to load submissions.</div></div><section class="playlist"><div class="row between"><div><h3>🎧 Broadcast-ready playlist</h3><p class="muted">Approved recordings only. Review each track before putting it on air.</p></div><span class="pill approved" id="playlistCount">0 tracks</span></div><div class="broadcast-console"><h4>🎚️ ON-AIR PLAYBACK DECK</h4><div id="nowPlaying" class="now-playing">Select an approved recording below to load the studio player.</div><audio id="broadcastAudio" controls preload="metadata"></audio><div class="row"><button type="button" class="secondary" id="previousTrack">⏮ Previous</button><button type="button" id="playPauseTrack">▶ Play</button><button type="button" class="secondary" id="nextTrack">Next ⏭</button><button type="button" class="danger" id="stopTrack">■ Stop</button></div><p class="muted">Use headphones and check levels before sending audio to your live broadcast mixer. This player does not transmit to the station stream.</p></div><div id="playlistList"><div class="empty">Approved recordings will appear here.</div></div></section><div id="dashStatus" class="status hidden"></div></div>
 </section>
 </main>
 <script>
 const SUPABASE_URL="https://hdcajbocoeawospstggb.supabase.co";
 const SUPABASE_KEY="sb_publishable_tB0pW-fU9hMMHQsUdgx0yQ_GiQpD2Tu";
 const client=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
-let submissions=[],filter="all",searchTerm="";
+let submissions=[],filter="all",searchTerm="",playlistTracks=[],currentTrackIndex=-1;
 const $=id=>document.getElementById(id);
 function showStatus(el,msg,kind){el.textContent=msg;el.className="status "+kind;}
 function safe(value){return String(value??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
@@ -79,15 +79,46 @@ async function render(){
   }));
   $("list").innerHTML=html.join("");
  }
- if(!approved.length){$("playlistList").innerHTML='<div class="empty">No approved recordings yet. Approve a submission to add it here.</div>';}
- else{
-  const tracks=await Promise.all(approved.map(async(x,i)=>{
-   const links=await makeAudioLinks(x);
-   return '<div class="track"><div class="row between"><strong>'+String(i+1)+'. '+safe(x.name)+' — '+safe(x.category)+'</strong><span class="pill approved">Approved</span></div><div class="meta">'+safe(x.location)+' · '+safe(x.duration_seconds)+' sec · '+safe(new Date(x.created_at).toLocaleString())+'</div>'+(links.playUrl?'<audio controls preload="none" src="'+safe(links.playUrl)+'"></audio>':"<p class='muted'>Audio unavailable. Refresh to try again.</p>")+(links.downloadUrl?'<a href="'+safe(links.downloadUrl)+'" download style="display:inline-block;text-decoration:none"><button type="button" class="secondary">⬇ Download track</button></a>':'')+'</div>';
-  }));
-  $("playlistList").innerHTML=tracks.join("");
+ const tracks=await Promise.all(approved.map(async x=>{
+  const links=await makeAudioLinks(x);
+  return {...x,playUrl:links.playUrl,downloadUrl:links.downloadUrl};
+ }));
+ playlistTracks=tracks.filter(x=>x.playUrl);
+ if(currentTrackIndex>=playlistTracks.length)currentTrackIndex=-1;
+ if(!playlistTracks.length){
+  $("playlistList").innerHTML='<div class="empty">No approved recordings yet. Approve a submission to add it here.</div>';
+  $("nowPlaying").textContent="No approved tracks available.";
+  $("broadcastAudio").removeAttribute("src");
+  $("broadcastAudio").load();
+ }else{
+  $("playlistList").innerHTML=playlistTracks.map((x,i)=>
+   '<div class="track '+(i===currentTrackIndex?'active':'')+'" data-track-card="'+i+'"><div class="row between"><strong>'+String(i+1)+'. '+safe(x.name)+' — '+safe(x.category)+'</strong><span class="pill approved">Approved</span></div><div class="meta">'+safe(x.location)+' · '+safe(x.duration_seconds)+' sec · '+safe(new Date(x.created_at).toLocaleString())+'</div><div class="row"><button type="button" data-play-index="'+i+'">▶ Load & play</button>'+(x.downloadUrl?'<a href="'+safe(x.downloadUrl)+'" download style="display:inline-block;text-decoration:none"><button type="button" class="secondary">⬇ Download</button></a>':'')+'</div></div>'
+  ).join("");
  }
 }
+function updateBroadcastDeck(){
+ const playing=currentTrackIndex>=0?playlistTracks[currentTrackIndex]:null;
+ $("playPauseTrack").textContent=$("broadcastAudio").paused?"▶ Play":"Ⅱ Pause";
+ if(playing)$("nowPlaying").textContent="Now selected: "+playing.name+" · "+playing.category+" · "+(currentTrackIndex+1)+" of "+playlistTracks.length;
+}
+async function playPlaylistTrack(index){
+ if(index<0||index>=playlistTracks.length)return;
+ currentTrackIndex=index;
+ const track=playlistTracks[index],audio=$("broadcastAudio");
+ audio.src=track.playUrl;audio.load();
+ $("nowPlaying").textContent="Loading: "+track.name;
+ document.querySelectorAll("[data-track-card]").forEach(card=>card.classList.toggle("active",Number(card.dataset.trackCard)===index));
+ try{await audio.play();}catch(err){$("nowPlaying").textContent="Track loaded. Tap Play on the audio player if playback was blocked.";}
+ updateBroadcastDeck();
+}
+$("playlistList").addEventListener("click",e=>{const b=e.target.closest("button[data-play-index]");if(b)playPlaylistTrack(Number(b.dataset.playIndex));});
+$("playPauseTrack").addEventListener("click",async()=>{const a=$("broadcastAudio");if(currentTrackIndex<0&&playlistTracks.length){await playPlaylistTrack(0);return;}if(a.paused){try{await a.play();}catch(err){$("nowPlaying").textContent="Tap the audio player's play control to start playback.";}}else a.pause();updateBroadcastDeck();});
+$("previousTrack").addEventListener("click",()=>{if(playlistTracks.length)playPlaylistTrack((currentTrackIndex<=0?playlistTracks.length-1:currentTrackIndex-1));});
+$("nextTrack").addEventListener("click",()=>{if(playlistTracks.length)playPlaylistTrack((currentTrackIndex+1)%playlistTracks.length);});
+$("stopTrack").addEventListener("click",()=>{const a=$("broadcastAudio");a.pause();a.currentTime=0;updateBroadcastDeck();});
+$("broadcastAudio").addEventListener("play",updateBroadcastDeck);
+$("broadcastAudio").addEventListener("pause",updateBroadcastDeck);
+$("broadcastAudio").addEventListener("ended",()=>{if(playlistTracks.length&&currentTrackIndex<playlistTracks.length-1)playPlaylistTrack(currentTrackIndex+1);else updateBroadcastDeck();});
 $("list").addEventListener("click",async e=>{const b=e.target.closest("button[data-action]");if(!b)return;b.disabled=true;try{const {error}=await client.from("voice_submissions").update({status:b.dataset.action}).eq("id",b.dataset.id);if(error)throw error;await loadSubmissions();}catch(err){showStatus($("dashStatus"),err.message||"Status update failed.","err");$("dashStatus").classList.remove("hidden");b.disabled=false;}});
 client.auth.onAuthStateChange(async(_event,session)=>{if(session){setSignedIn(true);const {data}=await client.from("voice_staff").select("user_id").maybeSingle();if(data)await loadSubmissions();else{await client.auth.signOut();setSignedIn(false);}}else setSignedIn(false);});
 (async()=>{const {data:{session}}=await client.auth.getSession();if(session){const {data}=await client.from("voice_staff").select("user_id").maybeSingle();if(data){setSignedIn(true);await loadSubmissions();}else await client.auth.signOut();}})();
