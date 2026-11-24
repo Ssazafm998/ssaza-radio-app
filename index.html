@@ -132,7 +132,7 @@ nav a{color:#F7EEFF}
   overflow:hidden;
   isolation:isolate;
   transform:translateY(18px);
-  opacity:0;
+  opacity:1;
   animation:ssazaTileEnter .75s cubic-bezier(.2,.75,.25,1) forwards;
   transition:transform .28s ease, box-shadow .28s ease, border-color .28s ease;
 }
@@ -275,6 +275,17 @@ nav a{color:#F7EEFF}
 }
 /* The user explicitly requested the Explore cards to keep their visible 3D motion. */
 
+/* Final visibility safeguard: keep all four Explore links visible while 3D motion runs */
+.grid > a.tile{
+  display:flex !important;
+  opacity:1 !important;
+  visibility:visible !important;
+  animation-name:ssazaCardRock !important;
+  animation-duration:6s !important;
+  animation-timing-function:ease-in-out !important;
+  animation-iteration-count:infinite !important;
+  animation-fill-mode:both !important;
+}
 </style>
 </head>
 <body>
