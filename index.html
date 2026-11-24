@@ -176,6 +176,50 @@ nav a{color:#F7EEFF}
   .grid .tile::after{display:none}
 }
 
+
+/* Explore section: distinct backdrop and staggered movement for card icons and copy */
+.grid{
+  position:relative;
+  padding:16px;
+  margin:14px -2px 24px;
+  border-radius:24px;
+  background:linear-gradient(145deg,#3D2858 0%,#4A3268 52%,#38234F 100%);
+  border:1px solid rgba(214,190,246,.58);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.08),0 12px 28px rgba(30,15,44,.22);
+}
+.grid .tile{
+  background:linear-gradient(145deg,#76549A,#684787) !important;
+  border-color:#D0B8F2;
+}
+.grid .tile .emoji,
+.grid .tile strong,
+.grid .tile small{
+  display:block;
+  opacity:0;
+  animation:ssazaTileContent 650ms cubic-bezier(.2,.75,.25,1) forwards;
+}
+.grid .tile .emoji{transform:translateY(12px) scale(.82);transform-origin:left center}
+.grid .tile strong{transform:translateX(-12px)}
+.grid .tile small{transform:translateY(9px)}
+.grid .tile:nth-child(1) .emoji{animation-delay:.16s}
+.grid .tile:nth-child(1) strong{animation-delay:.27s}
+.grid .tile:nth-child(1) small{animation-delay:.38s}
+.grid .tile:nth-child(2) .emoji{animation-delay:.30s}
+.grid .tile:nth-child(2) strong{animation-delay:.41s}
+.grid .tile:nth-child(2) small{animation-delay:.52s}
+.grid .tile:nth-child(3) .emoji{animation-delay:.44s}
+.grid .tile:nth-child(3) strong{animation-delay:.55s}
+.grid .tile:nth-child(3) small{animation-delay:.66s}
+.grid .tile:nth-child(4) .emoji{animation-delay:.58s}
+.grid .tile:nth-child(4) strong{animation-delay:.69s}
+.grid .tile:nth-child(4) small{animation-delay:.80s}
+@keyframes ssazaTileContent{
+  to{opacity:1;transform:translate(0,0) scale(1)}
+}
+@media(prefers-reduced-motion:reduce){
+  .grid .tile .emoji,.grid .tile strong,.grid .tile small{opacity:1;transform:none;animation:none}
+}
+
 </style>
 </head>
 <body>
