@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#211033">
+<meta name="robots" content="noindex,nofollow">
+<title>Studio Dashboard | SSAZA FM 99.8</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+:root{--bg:#170b25;--panel:#29183c;--panel2:#35204d;--gold:#ffd84d;--purple:#8e65b4;--text:#fffaff;--muted:#cbb9dc;--green:#39c98a;--red:#ff7777;--line:#62457d}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 10% 0%,#50316b 0,#241236 38%,var(--bg) 78%);color:var(--text);font-family:Arial,Helvetica,sans-serif;min-height:100vh}
+header{max-width:1100px;margin:auto;padding:18px;display:flex;align-items:center;justify-content:space-between;gap:12px}.brand{display:flex;align-items:center;gap:12px}.logo{width:48px;height:48px;border-radius:14px;background:var(--gold);color:#39254f;display:grid;place-items:center;font-size:25px}.brand b{color:var(--gold);font-size:17px}.brand small{display:block;color:var(--muted);font-size:10px;letter-spacing:1.3px;margin-top:4px}
+main{max-width:1100px;margin:auto;padding:12px 18px 60px}.hero h1{font-size:clamp(27px,5vw,38px);color:var(--gold);margin:8px 0}.hero p{color:var(--muted);font-size:13px;line-height:1.6;margin:0}
+.panel{background:linear-gradient(145deg,#392650,#251638);border:1px solid var(--line);border-radius:18px;padding:18px;margin:16px 0;box-shadow:0 12px 30px #0003}
+label{display:block;color:var(--gold);font-size:12px;font-weight:800;margin:12px 0 6px}input{width:100%;padding:13px;border-radius:11px;border:1px solid #8e6cad;background:#1e112e;color:white;font-size:15px}button,.btn{border:0;border-radius:999px;padding:11px 16px;background:var(--gold);color:#38244d;font-weight:900;cursor:pointer;font-size:13px}button.secondary{background:#49315f;border:1px solid #9878b7;color:white}button.danger{background:#542637;color:#ffdfe4;border:1px solid #a64c64}button:disabled{opacity:.5;cursor:not-allowed}
+.row{display:flex;align-items:center;gap:9px;flex-wrap:wrap}.row.between{justify-content:space-between}.muted{color:var(--muted);font-size:12px}.hidden{display:none!important}.status{padding:12px;border-radius:11px;font-size:13px;line-height:1.5;margin-top:12px}.ok{background:#123f36;color:#d7ffed;border:1px solid var(--green)}.err{background:#4b202c;color:#ffe3e3;border:1px solid var(--red)}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:18px 0}.stat{background:#2b1a3e;border:1px solid var(--line);border-radius:14px;padding:14px}.stat strong{display:block;color:var(--gold);font-size:25px}.stat span{font-size:11px;color:var(--muted)}
+.filters{display:flex;gap:7px;flex-wrap:wrap;margin:14px 0}.filter{background:#402b57;color:#eee;border:1px solid #765992}.filter.active{background:var(--gold);color:#38244d;border-color:var(--gold)}
+.list{display:grid;gap:12px}.submission{background:#211331;border:1px solid #5c4174;border-radius:15px;padding:15px}.submission h3{margin:0 0 6px;color:var(--gold);font-size:17px}.meta{font-size:12px;color:var(--muted);line-height:1.7}.message{background:#302044;border-radius:10px;padding:11px;margin:10px 0;font-size:13px;line-height:1.5;white-space:pre-wrap}.submission audio{width:100%;margin:8px 0}.pill{display:inline-block;padding:5px 9px;border-radius:99px;font-size:10px;font-weight:900;text-transform:uppercase;background:#49315f;color:#eee}.pill.pending{background:#5b4821;color:#ffe79b}.pill.approved{background:#124b3a;color:#aaffd8}.pill.rejected{background:#572b37;color:#ffc2cc}.pill.archived{background:#3e3b48;color:#ddd}.empty{text-align:center;padding:28px;color:var(--muted);font-size:13px}
+@media(max-width:620px){.stats{grid-template-columns:repeat(2,1fr)}header{padding:14px}main{padding:8px 12px 45px}.panel{padding:14px}}
+</style>
+</head>
+<body>
+<header><div class="brand"><div class="logo">🎙️</div><div><b>SSAZA FM 99.8</b><small>PRIVATE STUDIO CONTROL ROOM</small></div></div><button id="signOut" class="secondary hidden">Sign out</button></header>
+<main>
+<section class="hero"><h1>Studio Dashboard</h1><p>Review listener voice messages before they go on air. Submitted recordings are private and require studio approval.</p></section>
+<section id="loginPanel" class="panel">
+<h2 style="margin:0;color:var(--gold)">Staff sign in</h2><p class="muted">This area is restricted to authorised SSAZA FM staff accounts.</p>
+<form id="loginForm"><label for="email">Staff email</label><input id="email" type="email" autocomplete="username" required placeholder="staff@example.com"><label for="password">Password</label><input id="password" type="password" autocomplete="current-password" required placeholder="Your password"><div class="row" style="margin-top:16px"><button id="loginButton" type="submit">Sign in securely</button></div></form>
+<div id="loginStatus" class="status hidden"></div>
+</section>
+<section id="dashboard" class="hidden">
+<div class="stats">
+<div class="stat"><strong id="totalCount">0</strong><span>Total messages</span></div><div class="stat"><strong id="pendingCount">0</strong><span>Awaiting review</span></div><div class="stat"><strong id="approvedCount">0</strong><span>Approved</span></div><div class="stat"><strong id="rejectedCount">0</strong><span>Rejected</span></div>
+</div>
+<div class="panel"><div class="row between"><div><h2 style="margin:0;color:var(--gold)">Listener submissions</h2><p class="muted" style="margin:6px 0 0">Newest messages appear first.</p></div><button id="refresh" class="secondary">↻ Refresh</button></div>
+<div class="filters" id="filters"><button class="filter active" data-filter="all">All</button><button class="filter" data-filter="pending">Pending</button><button class="filter" data-filter="approved">Approved</button><button class="filter" data-filter="rejected">Rejected</button><button class="filter" data-filter="archived">Archived</button></div>
+<div id="list" class="list"><div class="empty">Sign in to load submissions.</div></div><div id="dashStatus" class="status hidden"></div></div>
+</section>
+</main>
+<script>
+const SUPABASE_URL="https://hdcajbocoeawospstggb.supabase.co";
+const SUPABASE_KEY="sb_publishable_tB0pW-fU9hMMHQsUdgx0yQ_GiQpD2Tu";
+const client=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+let submissions=[],filter="all";
+const $=id=>document.getElementById(id);
+function showStatus(el,msg,kind){el.textContent=msg;el.className="status "+kind;}
+function safe(value){return String(value??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
+function setSignedIn(on){$("loginPanel").classList.toggle("hidden",on);$("dashboard").classList.toggle("hidden",!on);$("signOut").classList.toggle("hidden",!on);}
+$("loginForm").addEventListener("submit",async e=>{e.preventDefault();$("loginButton").disabled=true;try{const {error}=await client.auth.signInWithPassword({email:$("email").value.trim(),password:$("password").value});if(error)throw error;const {data:staff,error:staffError}=await client.from("voice_staff").select("user_id").maybeSingle();if(staffError||!staff){await client.auth.signOut();throw new Error("This account is not authorised for the SSAZA FM studio dashboard.");}setSignedIn(true);await loadSubmissions();}catch(err){showStatus($("loginStatus"),err.message||"Sign-in failed.","err");$("loginStatus").classList.remove("hidden");}finally{$("loginButton").disabled=false;}});
+$("signOut").addEventListener("click",async()=>{await client.auth.signOut();submissions=[];setSignedIn(false);$("list").innerHTML='<div class="empty">Sign in to load submissions.</div>';});
+$("refresh").addEventListener("click",loadSubmissions);
+$("filters").addEventListener("click",e=>{const b=e.target.closest("button[data-filter]");if(!b)return;filter=b.dataset.filter;document.querySelectorAll(".filter").forEach(x=>x.classList.toggle("active",x===b));render();});
+async function loadSubmissions(){ $("list").innerHTML='<div class="empty">Loading listener messages…</div>';try{const {data,error}=await client.from("voice_submissions").select("id,name,location,category,message,file_path,mime_type,duration_seconds,status,created_at").order("created_at",{ascending:false}).limit(100);if(error)throw error;submissions=data||[];updateStats();render();$("dashStatus").classList.add("hidden");}catch(err){$("list").innerHTML="";showStatus($("dashStatus"),err.message||"Could not load submissions.","err");$("dashStatus").classList.remove("hidden");}}
+function updateStats(){$("totalCount").textContent=submissions.length;$("pendingCount").textContent=submissions.filter(x=>x.status==="pending").length;$("approvedCount").textContent=submissions.filter(x=>x.status==="approved").length;$("rejectedCount").textContent=submissions.filter(x=>x.status==="rejected").length;}
+async function render(){const rows=submissions.filter(x=>filter==="all"||x.status===filter);if(!rows.length){$("list").innerHTML='<div class="empty">No messages in this view yet.</div>';return;}const html=await Promise.all(rows.map(async x=>{const {data,error}=await client.storage.from("voice-notes").createSignedUrl(x.file_path,3600);const audio=error?"<p class='muted'>Audio link unavailable. Refresh or check staff storage permissions.</p>":'<audio controls preload="none" src="'+safe(data.signedUrl)+'"></audio>';return '<article class="submission"><div class="row between"><h3>'+safe(x.name)+'</h3><span class="pill '+safe(x.status)+'">'+safe(x.status)+'</span></div><div class="meta">📍 '+safe(x.location)+' · '+safe(x.category)+' · '+safe(x.duration_seconds)+' sec<br>🕒 '+safe(new Date(x.created_at).toLocaleString())+'</div>'+(x.message?'<div class="message">'+safe(x.message)+'</div>':'')+audio+'<div class="row"><button class="secondary" data-action="approved" data-id="'+safe(x.id)+'">Approve</button><button class="danger" data-action="rejected" data-id="'+safe(x.id)+'">Reject</button><button class="secondary" data-action="archived" data-id="'+safe(x.id)+'">Archive</button></div></article>';}));$("list").innerHTML=html.join("");}
+$("list").addEventListener("click",async e=>{const b=e.target.closest("button[data-action]");if(!b)return;b.disabled=true;try{const {error}=await client.from("voice_submissions").update({status:b.dataset.action}).eq("id",b.dataset.id);if(error)throw error;await loadSubmissions();}catch(err){showStatus($("dashStatus"),err.message||"Status update failed.","err");$("dashStatus").classList.remove("hidden");b.disabled=false;}});
+client.auth.onAuthStateChange(async(_event,session)=>{if(session){setSignedIn(true);const {data}=await client.from("voice_staff").select("user_id").maybeSingle();if(data)await loadSubmissions();else{await client.auth.signOut();setSignedIn(false);}}else setSignedIn(false);});
+(async()=>{const {data:{session}}=await client.auth.getSession();if(session){const {data}=await client.from("voice_staff").select("user_id").maybeSingle();if(data){setSignedIn(true);await loadSubmissions();}else await client.auth.signOut();}})();
+</script>
+</body>
+</html>
