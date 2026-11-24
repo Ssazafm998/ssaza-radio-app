@@ -648,15 +648,10 @@ section[aria-label="Latest news"] .news-feature .news-read{
 }
 
 
-/* SSAZA FM Facebook follow panel — positioned between the live player and programme guide */
-.facebook-follow{margin:18px 0 24px;padding:16px;background:linear-gradient(145deg,#7959A0,#563873);border:1px solid #D0B8F2;border-radius:18px;box-shadow:0 10px 26px #24153255;display:flex;align-items:center;gap:14px}
-.facebook-follow .fb-mark{width:48px;height:48px;flex:0 0 48px;border-radius:14px;background:#1877F2;color:#fff;display:grid;place-items:center;font-family:Arial,sans-serif;font-size:36px;font-weight:800;line-height:1}
-.facebook-follow .fb-copy{flex:1;min-width:0}
-.facebook-follow .fb-copy strong{display:block;color:#FFD84D;font-size:15px;line-height:1.3}
-.facebook-follow .fb-copy span{display:block;color:#F0E5FF;font-size:11px;line-height:1.45;margin-top:4px}
-.facebook-follow .fb-link{display:inline-flex;align-items:center;justify-content:center;gap:7px;margin-top:10px;padding:10px 14px;border-radius:999px;background:#1877F2;color:#fff;text-decoration:none;font-size:12px;font-weight:800;box-shadow:0 5px 14px #17275a66}
-.facebook-follow .fb-link:active{transform:scale(.97)}
-@media(max-width:380px){.facebook-follow{align-items:flex-start;gap:10px;padding:13px}.facebook-follow .fb-mark{width:42px;height:42px;flex-basis:42px;font-size:31px}.facebook-follow .fb-copy strong{font-size:13px}}
+
+/* Facebook link inside the scrolling announcement ticker */
+.announcement-track .ticker-facebook-link{color:#FFD84D;text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:3px;font-weight:800;pointer-events:auto}
+.announcement-track .ticker-facebook-link:focus-visible{outline:2px solid #FFD84D;outline-offset:3px;border-radius:3px}
 
 </style>
 </head>
@@ -668,12 +663,12 @@ section[aria-label="Latest news"] .news-feature .news-read{
 <div class="announcement-ticker" role="region" aria-label="SSAZA FM announcements">
   <div class="announcement-track">
     <span><strong>FIND US:</strong> Bukwiri Town Council Road</span><span class="ticker-separator">•</span>
-    <span><strong>FOLLOW SSAZA FM 99.8</strong> on TikTok, Facebook and YouTube</span><span class="ticker-separator">•</span>
+    <span><strong>FOLLOW SSAZA FM 99.8</strong> on TikTok, <a class="ticker-facebook-link" href="https://www.facebook.com/share/19oKQCekwQ/" target="_blank" rel="noopener noreferrer" aria-label="Visit SSAZA FM on Facebook">Facebook</a> and YouTube</span><span class="ticker-separator">•</span>
     <span><strong>DON'T MISS ENSASAGE RENEWED!</strong> 5 December at Ntwetwe Mukisawe</span><span class="ticker-separator">•</span>
     <span><strong>CELEBRATING 4 YEARS</strong> of seamless broadcast!</span><span class="ticker-separator">•</span>
     <span>Live performances by <strong>King Saha, Henry Mwanje, Robert Rota, Reachel Namiro</strong> and many more</span><span class="ticker-separator">•</span>
     <span><strong>FIND US:</strong> Bukwiri Town Council Road</span><span class="ticker-separator">•</span>
-    <span><strong>FOLLOW SSAZA FM 99.8</strong> on TikTok, Facebook and YouTube</span><span class="ticker-separator">•</span>
+    <span><strong>FOLLOW SSAZA FM 99.8</strong> on TikTok, <a class="ticker-facebook-link" href="https://www.facebook.com/share/19oKQCekwQ/" target="_blank" rel="noopener noreferrer" aria-label="Visit SSAZA FM on Facebook">Facebook</a> and YouTube</span><span class="ticker-separator">•</span>
     <span><strong>DON'T MISS ENSASAGE RENEWED!</strong> 5 December at Ntwetwe Mukisawe</span><span class="ticker-separator">•</span>
     <span><strong>CELEBRATING 4 YEARS</strong> of seamless broadcast!</span><span class="ticker-separator">•</span>
     <span>Live performances by <strong>King Saha, Henry Mwanje, Robert Rota, Reachel Namiro</strong> and many more</span><span class="ticker-separator">•</span>
@@ -691,14 +686,7 @@ section[aria-label="Latest news"] .news-feature .news-read{
 <p class="hint">Live playback is provided by our existing Caster.fm station player. It needs an internet connection and the station must be on air.</p>
 </section>
 
-<section class="facebook-follow" aria-label="Follow SSAZA FM on Facebook">
-  <div class="fb-mark" aria-hidden="true">f</div>
-  <div class="fb-copy">
-    <strong>FOLLOW SSAZA FM ON FACEBOOK</strong>
-    <span>Get our latest updates, programmes and station announcements.</span>
-    <a class="fb-link" href="https://www.facebook.com/share/19oKQCekwQ/" target="_blank" rel="noopener noreferrer" aria-label="Visit SSAZA FM on Facebook">Visit our Facebook page <span aria-hidden="true">↗</span></a>
-  </div>
-</section>
+
 
 <section class="program-guide" id="program-guide" aria-label="Weekly programme guide">
   <div class="guide-heading"><h2>🗓️ PROGRAMME GUIDE</h2><span class="eat-clock" id="eat-clock">Uganda Time (EAT)</span></div>
