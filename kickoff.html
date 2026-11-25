@@ -36,16 +36,16 @@ footer{text-align:center;color:#d9c8eb;font-size:11px;padding:22px 0}
 <header><div class="brand">SSAZA FM 99.8<small>KICKOFF FOOTBALL CENTRE</small></div><a class="back" href="index.html">← SSAZA FM HOME</a></header>
 <main>
 <img class="hero-art" src="images/kickoff-99-8.png" alt="KICKOFF 99.8 footballer kicking a ball — official SSAZA FM artwork">
-<div class="tagline">Buli Mupiira. Buli Kuteebereza. Buli Kivuddemu.</div>
+<div class="tagline">Every Match. Every Prediction. Every Result.</div>
 <h1>KICKOFF 99.8</h1>
-<p class="sub">Eby’omupiira bya buli lunaku — okuteebereza, emipiira egigenda mu maaso, ebyava mu mipiira n’obutuufu bw’okuteebereza. Ebiteeberezebwa bya bibalo, si bukakafu.</p>
+<p class="sub">Your daily football hub for verified predictions, live scores, match results and prediction accuracy. Predictions are statistical estimates, not guarantees.</p>
 <div class="tabs" role="tablist" aria-label="Football centre sections">
-<button class="tab active" data-view="today">Eby'Olunaku Lw'Enkya / Today</button>
-<button class="tab" data-view="live">Emipiira Egigenda mu Maaso / Live</button>
-<button class="tab" data-view="yesterday">Ebyavaamu By'eggulo / Yesterday</button>
+<button class="tab active" data-view="today">Today & Upcoming</button>
+<button class="tab" data-view="live">Live Matches</button>
+<button class="tab" data-view="yesterday">Yesterday's Results</button>
 </div>
 <section class="panel" id="matchesPanel"><h2 id="sectionTitle">Today's predictions</h2><div id="matchList" class="empty">Loading verified football data…</div></section>
-<section class="panel"><h2>Enkola y'Okuteebereza / Prediction Accuracy</h2><div class="stats"><div class="stat"><b id="accuracy">—</b><span>Accuracy</span></div><div class="stat"><b id="correct">—</b><span>Correct</span></div><div class="stat"><b id="settled">—</b><span>Settled predictions</span></div></div><p class="sub">Accuracy is calculated from completed matches with a recorded prediction. Postponed and unfinished matches are excluded.</p></section>
+<section class="panel"><h2>Prediction Accuracy</h2><div class="stats"><div class="stat"><b id="accuracy">—</b><span>Accuracy</span></div><div class="stat"><b id="correct">—</b><span>Correct</span></div><div class="stat"><b id="settled">—</b><span>Settled predictions</span></div></div><p class="sub">Accuracy is calculated from completed matches with a recorded prediction. Postponed and unfinished matches are excluded.</p></section>
 <footer>© SSAZA FM 99.8 · KICKOFF 99.8 · Buli Mupiira. Buli Kuteebereza. Buli Kivuddemu.</footer>
 </main>
 <script>
@@ -62,7 +62,7 @@ function predictionFor(id){return predictions.find(p=>p.match_id===id);}
 function render(){
  const title=view==="today"?"Today's predictions":view==="live"?"Live matches":"Yesterday's results";
  $("sectionTitle").textContent=title;
- const rows=matches.filter(m=>view==="today"?dateKey(m.kickoff_at)===todayKey:view==="yesterday"?dateKey(m.kickoff_at)===yesterdayKey:["live","in_progress","1h","ht"].includes(String(m.status).toLowerCase()));
+ const rows=matches.filter(m=>view==="today"?dateKey(m.kickoff_at)===todayKey:view==="yesterday"?dateKey(m.kickoff_at)===yesterdayKey:["live","in_progress","1h","ht","half_time","2h","et","p"].includes(String(m.status).toLowerCase()));
  if(!rows.length){$("matchList").innerHTML='<div class="empty">No verified matches are available in this section yet. Please check again when the football data feed has updated.</div>';return;}
  $("matchList").innerHTML=rows.map(m=>{
   const p=predictionFor(m.id),finished=["finished","ft","full_time"].includes(String(m.status).toLowerCase());
@@ -76,7 +76,7 @@ function render(){
 async function load(){
  try{
   const [mr,pr]=await Promise.all([
-   db.from("football_matches").select("id,competition,home_team,away_team,kickoff_at,status,home_score,away_score").order("kickoff_at",{ascending:true}).limit(300),
+   db.from("football_matches").select("id,competition,home_team,away_team,kickoff_at,status,home_score,away_score").order("kickoff_at",{ascending:true}).limit(500),
    db.from("football_predictions").select("match_id,home_win_pct,draw_pct,away_win_pct,predicted_outcome,generated_at").limit(500)
   ]);
   if(mr.error)throw mr.error;if(pr.error)throw pr.error;
