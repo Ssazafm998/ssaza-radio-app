@@ -27,7 +27,7 @@ h1{font-size:clamp(24px,5vw,34px);color:var(--yellow);margin:8px 0}h2{font-size:
 .probs{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:9px}.prob{background:#1b1232;border-radius:9px;padding:8px;text-align:center;font-size:11px;color:#eee}.prob b{display:block;color:var(--yellow);font-size:16px;margin-bottom:3px}
 .status{display:inline-block;border-radius:99px;padding:4px 8px;background:#302044;color:#ffe99b;font-size:10px;font-weight:900;text-transform:uppercase}
 .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.stat{background:#21143d;border:1px solid #684d85;border-radius:12px;padding:13px;text-align:center}.stat b{display:block;color:var(--yellow);font-size:24px}.stat span{font-size:10px;color:var(--muted)}
-.empty{padding:24px;text-align:center;color:var(--muted);font-size:13px;line-height:1.6}.error{color:#ffd1d1}
+.news-card{padding:14px 0;border-top:1px solid #765992}.news-card:first-child{border-top:0}.news-meta{display:flex;flex-wrap:wrap;gap:7px;align-items:center;margin-bottom:7px}.news-category{font-size:10px;color:#ffe88c;font-weight:900;text-transform:uppercase}.news-date{font-size:10px;color:#d9c8eb}.news-card h3{font-size:16px;line-height:1.4;margin:5px 0;color:#fff}.news-card p{font-size:13px;line-height:1.6;color:#e6ddf1;margin:7px 0}.news-card details{margin-top:8px}.news-card summary{color:var(--yellow);font-size:12px;font-weight:800;cursor:pointer}.news-body{white-space:pre-line}.empty{padding:24px;text-align:center;color:var(--muted);font-size:13px;line-height:1.6}.error{color:#ffd1d1}
 footer{text-align:center;color:#d9c8eb;font-size:11px;padding:22px 0}
 @media(max-width:520px){.tabs{grid-template-columns:1fr}.match-head{align-items:flex-start}.stats{grid-template-columns:repeat(2,1fr)}}
 </style>
@@ -45,6 +45,11 @@ footer{text-align:center;color:#d9c8eb;font-size:11px;padding:22px 0}
 <button class="tab" data-view="yesterday">Yesterday's Results</button>
 </div>
 <section class="panel" id="matchesPanel"><h2 id="sectionTitle">Today's predictions</h2><div id="matchList" class="empty">Loading verified football data…</div></section>
+<section class="panel" id="sportsNewsPanel">
+<h2>Latest Sports News</h2>
+<p class="sub">Automatically generated match previews, live updates and full-time reports from verified football data.</p>
+<div id="sportsNewsList" class="empty">Loading the latest football stories…</div>
+</section>
 <section class="panel"><h2>Prediction Accuracy</h2><div class="stats"><div class="stat"><b id="accuracy">—</b><span>Accuracy</span></div><div class="stat"><b id="correct">—</b><span>Correct</span></div><div class="stat"><b id="settled">—</b><span>Settled predictions</span></div></div><p class="sub">Accuracy is calculated from completed matches with a recorded prediction. Postponed and unfinished matches are excluded.</p></section>
 <footer>© SSAZA FM 99.8 · KICKOFF 99.8 · Buli Mupiira. Buli Kuteebereza. Buli Kivuddemu.</footer>
 </main>
@@ -75,6 +80,19 @@ function render(){
    (finished&&p?'<p class="sub">Prediction: '+esc(p.predicted_outcome||"Not recorded")+'</p>':'')+'</article>';
  }).join("");
 }
+async function loadSportsNews(){
+ const host=$("sportsNewsList");
+ try{
+  const {data,error}=await db.from("kickoff_news").select("id,category,story_type,headline,summary,body,competition,generated_at,published_at").eq("published",true).order("published_at",{ascending:false}).limit(20);
+  if(error)throw error;
+  if(!data||!data.length){host.innerHTML='<div class="empty">Our newsroom is preparing its first verified football stories. Check back shortly.</div>';return;}
+  host.innerHTML=data.map(a=>{
+   const kind=a.story_type==="preview"?"MATCH PREVIEW":a.story_type==="live_update"?"LIVE UPDATE":"FULL-TIME REPORT";
+   const when=new Date(a.published_at||a.generated_at).toLocaleString("en-GB",{timeZone:"Africa/Kampala",day:"2-digit",month:"short",hour:"2-digit",minute:"2-digit"});
+   return '<article class="news-card"><div class="news-meta"><span class="news-category">'+esc(a.category)+'</span><span class="status">'+kind+'</span><span class="news-date">'+when+' EAT</span></div><h3>'+esc(a.headline)+'</h3><p>'+esc(a.summary)+'</p><details><summary>Read full story</summary><p class="news-body">'+esc(a.body)+'</p><p class="news-date">Source: API-Football match data · Automated report</p></details></article>';
+  }).join("");
+ }catch(err){host.innerHTML='<div class="empty error">Sports news is temporarily unavailable. Please refresh shortly.</div>';console.error(err);}
+}
 async function load(){
  try{
   const cutoff=new Date(Date.now()-72*60*60*1000).toISOString();
@@ -95,7 +113,7 @@ async function load(){
  }catch(err){$("matchList").innerHTML='<div class="empty error">Football data is not connected yet. The page is ready, but the Supabase football tables and verified fixtures feed must be configured before matches can appear.</div>';console.error(err);}
 }
 document.querySelectorAll(".tab").forEach(b=>b.addEventListener("click",()=>{view=b.dataset.view;document.querySelectorAll(".tab").forEach(x=>x.classList.toggle("active",x===b));render();}));
-load();setInterval(load,30000);
+load();loadSportsNews();setInterval(load,30000);setInterval(loadSportsNews,300000);
 </script>
 </body>
 </html>
