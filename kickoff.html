@@ -66,10 +66,12 @@ function render(){
  if(!rows.length){$("matchList").innerHTML='<div class="empty">No verified matches are available in this section yet. Please check again when the football data feed has updated.</div>';return;}
  $("matchList").innerHTML=rows.map(m=>{
   const p=predictionFor(m.id),finished=["finished","ft","full_time"].includes(String(m.status).toLowerCase());
+  const live=["live","in_progress","1h","ht","half_time","2h","et","p"].includes(String(m.status).toLowerCase());
+  const minute=live?(m.elapsed_minute!==null?String(m.elapsed_minute)+"′"+(m.elapsed_extra?"+"+m.elapsed_extra:""):"Minute pending"):esc(m.status_detail||m.status||"scheduled");
   const score= m.home_score!==null&&m.away_score!==null?'<span class="score">'+esc(m.home_score)+' – '+esc(m.away_score)+'</span>':'';
   const time=new Date(m.kickoff_at).toLocaleString("en-GB",{timeZone:"Africa/Kampala",day:"2-digit",month:"short",hour:"2-digit",minute:"2-digit"});
-  return '<article class="match"><div class="match-head"><div><div class="teams">'+esc(m.home_team)+' vs '+esc(m.away_team)+'</div><span class="status">'+esc(m.status||"scheduled")+'</span></div><div class="kick">'+time+' EAT<br>'+score+'</div></div>'+
-   (p?'<div class="probs"><div class="prob"><b>'+pct(p.home_win_pct)+'</b>Home</div><div class="prob"><b>'+pct(p.draw_pct)+'</b>Draw</div><div class="prob"><b>'+pct(p.away_win_pct)+'</b>Away</div></div>':'')+
+  return '<article class="match"><div class="match-head"><div><div class="teams">'+esc(m.home_team)+' vs '+esc(m.away_team)+'</div><span class="status">'+(live?"LIVE · "+minute:esc(m.status_detail||m.status||"scheduled"))+'</span></div><div class="kick">'+time+' EAT<br>'+score+'</div></div>'+
+   (p?'<p class="sub"><strong>TIP: '+esc(({home:"Home win",draw:"Draw",away:"Away win"})[String(p.predicted_outcome||"").toLowerCase()]||p.predicted_outcome||"Prediction")+'</strong></p><div class="probs"><div class="prob"><b>'+pct(p.home_win_pct)+'</b>Home</div><div class="prob"><b>'+pct(p.draw_pct)+'</b>Draw</div><div class="prob"><b>'+pct(p.away_win_pct)+'</b>Away</div></div>'+(p.explanation?'<p class="sub">'+esc(p.explanation)+'</p>':''):(!finished?'<p class="sub">Prediction tip is not available yet.</p>':''))+
    (finished&&p?'<p class="sub">Prediction: '+esc(p.predicted_outcome||"Not recorded")+'</p>':'')+'</article>';
  }).join("");
 }
@@ -77,9 +79,9 @@ async function load(){
  try{
   const cutoff=new Date(Date.now()-72*60*60*1000).toISOString();
   const [recent,live,pr]=await Promise.all([
-   db.from("football_matches").select("id,competition,home_team,away_team,kickoff_at,status,home_score,away_score").gte("kickoff_at",cutoff).order("kickoff_at",{ascending:true}).limit(500),
-   db.from("football_matches").select("id,competition,home_team,away_team,kickoff_at,status,home_score,away_score").in("status",["live","in_progress","1h","ht","half_time","2h","et","p"]).order("kickoff_at",{ascending:true}).limit(200),
-   db.from("football_predictions").select("match_id,home_win_pct,draw_pct,away_win_pct,predicted_outcome,generated_at").limit(500)
+   db.from("football_matches").select("id,competition,home_team,away_team,kickoff_at,status,home_score,away_score,elapsed_minute,elapsed_extra,status_detail").gte("kickoff_at",cutoff).order("kickoff_at",{ascending:true}).limit(500),
+   db.from("football_matches").select("id,competition,home_team,away_team,kickoff_at,status,home_score,away_score,elapsed_minute,elapsed_extra,status_detail").in("status",["live","in_progress","1h","ht","half_time","2h","et","p"]).order("kickoff_at",{ascending:true}).limit(200),
+   db.from("football_predictions").select("match_id,home_win_pct,draw_pct,away_win_pct,predicted_outcome,over_2_5_pct,btts_pct,explanation,generated_at").limit(500)
   ]);
   if(recent.error)throw recent.error;if(live.error)throw live.error;if(pr.error)throw pr.error;
   const combined=new Map();
@@ -93,7 +95,7 @@ async function load(){
  }catch(err){$("matchList").innerHTML='<div class="empty error">Football data is not connected yet. The page is ready, but the Supabase football tables and verified fixtures feed must be configured before matches can appear.</div>';console.error(err);}
 }
 document.querySelectorAll(".tab").forEach(b=>b.addEventListener("click",()=>{view=b.dataset.view;document.querySelectorAll(".tab").forEach(x=>x.classList.toggle("active",x===b));render();}));
-load();setInterval(load,60000);
+load();setInterval(load,30000);
 </script>
 </body>
 </html>
