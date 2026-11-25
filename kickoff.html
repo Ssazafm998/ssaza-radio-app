@@ -75,12 +75,17 @@ function render(){
 }
 async function load(){
  try{
-  const [mr,pr]=await Promise.all([
-   db.from("football_matches").select("id,competition,home_team,away_team,kickoff_at,status,home_score,away_score").gte("kickoff_at",new Date(Date.now()-72*60*60*1000).toISOString()).order("kickoff_at",{ascending:true}).limit(500),
+  const cutoff=new Date(Date.now()-72*60*60*1000).toISOString();
+  const [recent,live,pr]=await Promise.all([
+   db.from("football_matches").select("id,competition,home_team,away_team,kickoff_at,status,home_score,away_score").gte("kickoff_at",cutoff).order("kickoff_at",{ascending:true}).limit(500),
+   db.from("football_matches").select("id,competition,home_team,away_team,kickoff_at,status,home_score,away_score").in("status",["live","in_progress","1h","ht","half_time","2h","et","p"]).order("kickoff_at",{ascending:true}).limit(200),
    db.from("football_predictions").select("match_id,home_win_pct,draw_pct,away_win_pct,predicted_outcome,generated_at").limit(500)
   ]);
-  if(mr.error)throw mr.error;if(pr.error)throw pr.error;
-  matches=mr.data||[];predictions=pr.data||[];
+  if(recent.error)throw recent.error;if(live.error)throw live.error;if(pr.error)throw pr.error;
+  const combined=new Map();
+  [...(recent.data||[]),...(live.data||[])].forEach(m=>combined.set(m.id,m));
+  matches=[...combined.values()].sort((x,y)=>new Date(x.kickoff_at)-new Date(y.kickoff_at));
+  predictions=pr.data||[];
   const settled=matches.filter(m=>["finished","ft","full_time"].includes(String(m.status).toLowerCase())).map(m=>({m,p:predictionFor(m.id)})).filter(x=>x.p);
   const correct=settled.filter(({m,p})=>{const actual=Number(m.home_score)>Number(m.away_score)?"home":Number(m.home_score)<Number(m.away_score)?"away":"draw";return String(p.predicted_outcome||"").toLowerCase()===actual;}).length;
   $("settled").textContent=settled.length;$("correct").textContent=correct;$("accuracy").textContent=settled.length?Math.round(correct/settled.length*100)+"%":"—";
