@@ -40,7 +40,7 @@ footer{text-align:center;color:#d9c8eb;font-size:11px;padding:22px 0}
 <h1>KICKOFF 99.8</h1>
 <p class="sub">Your daily football hub for verified predictions, live scores, match results and prediction accuracy. Predictions are statistical estimates, not guarantees.</p>
 <div class="tabs" role="tablist" aria-label="Football centre sections">
-<button class="tab active" data-view="today">Today & Upcoming</button>
+<button class="tab active" data-view="today">Upcoming Predictions</button>
 <button class="tab" data-view="live">Live Matches</button>
 <button class="tab" data-view="yesterday">Yesterday's Results</button>
 </div>
@@ -60,9 +60,9 @@ function esc(v){return String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&l
 function pct(v){return Number.isFinite(Number(v))?Math.round(Number(v))+"%":"—";}
 function predictionFor(id){return predictions.find(p=>p.match_id===id);}
 function render(){
- const title=view==="today"?"Today's predictions":view==="live"?"Live matches":"Yesterday's results";
+ const title=view==="today"?"Today's & Upcoming Predictions":view==="live"?"Live matches":"Yesterday's Results";
  $("sectionTitle").textContent=title;
- const rows=matches.filter(m=>view==="today"?dateKey(m.kickoff_at)>=todayKey:view==="yesterday"?dateKey(m.kickoff_at)===yesterdayKey:["live","in_progress","1h","ht","half_time","2h","et","p"].includes(String(m.status).toLowerCase()));
+ const rows=matches.filter(m=>view==="today"?dateKey(m.kickoff_at)>=todayKey&&String(m.status).toLowerCase()==="scheduled"&&new Date(m.kickoff_at)>new Date():view==="yesterday"?dateKey(m.kickoff_at)===yesterdayKey&&["finished","ft","full_time"].includes(String(m.status).toLowerCase()):["live","in_progress","1h","ht","half_time","2h","et","p"].includes(String(m.status).toLowerCase()));
  if(!rows.length){$("matchList").innerHTML='<div class="empty">No verified matches are available in this section yet. Please check again when the football data feed has updated.</div>';return;}
  $("matchList").innerHTML=rows.map(m=>{
   const p=predictionFor(m.id),finished=["finished","ft","full_time"].includes(String(m.status).toLowerCase());
