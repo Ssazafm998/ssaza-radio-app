@@ -62,7 +62,7 @@ function predictionFor(id){return predictions.find(p=>p.match_id===id);}
 function render(){
  const title=view==="today"?"Today's predictions":view==="live"?"Live matches":"Yesterday's results";
  $("sectionTitle").textContent=title;
- const rows=matches.filter(m=>view==="today"?dateKey(m.kickoff_at)===todayKey:view==="yesterday"?dateKey(m.kickoff_at)===yesterdayKey:["live","in_progress","1h","ht","half_time","2h","et","p"].includes(String(m.status).toLowerCase()));
+ const rows=matches.filter(m=>view==="today"?dateKey(m.kickoff_at)>=todayKey:view==="yesterday"?dateKey(m.kickoff_at)===yesterdayKey:["live","in_progress","1h","ht","half_time","2h","et","p"].includes(String(m.status).toLowerCase()));
  if(!rows.length){$("matchList").innerHTML='<div class="empty">No verified matches are available in this section yet. Please check again when the football data feed has updated.</div>';return;}
  $("matchList").innerHTML=rows.map(m=>{
   const p=predictionFor(m.id),finished=["finished","ft","full_time"].includes(String(m.status).toLowerCase());
@@ -76,7 +76,7 @@ function render(){
 async function load(){
  try{
   const [mr,pr]=await Promise.all([
-   db.from("football_matches").select("id,competition,home_team,away_team,kickoff_at,status,home_score,away_score").order("kickoff_at",{ascending:true}).limit(500),
+   db.from("football_matches").select("id,competition,home_team,away_team,kickoff_at,status,home_score,away_score").gte("kickoff_at",new Date(Date.now()-72*60*60*1000).toISOString()).order("kickoff_at",{ascending:true}).limit(500),
    db.from("football_predictions").select("match_id,home_win_pct,draw_pct,away_win_pct,predicted_outcome,generated_at").limit(500)
   ]);
   if(mr.error)throw mr.error;if(pr.error)throw pr.error;
