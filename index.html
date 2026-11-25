@@ -44,6 +44,20 @@ main{max-width:760px;margin:auto;padding:10px 16px 90px}.hero{text-align:center;
 .live-top{display:flex;align-items:center;justify-content:space-between;font-size:13px;font-weight:700;letter-spacing:1px}.dot{display:inline-block;width:9px;height:9px;border-radius:50%;background:#ff4545;margin-right:7px;box-shadow:0 0 12px #ff4545}
 .player-title{text-align:center;font-size:22px;font-weight:800;color:var(--yellow);margin:20px 0 4px}.player-sub{text-align:center;color:var(--muted);font-size:12px;margin-bottom:16px}
 #caster-player{min-height:82px;background:#fff;border-radius:13px;padding:12px;color:#111;overflow:hidden}
+
+/* SSAZA FM live presenter status panel */
+.ssaza-live-now{position:relative;overflow:hidden;padding:14px 16px 13px;border-radius:14px;border:1px solid rgba(187,104,255,.62);background:linear-gradient(120deg,#16002f 0%,#24105b 52%,#0d174e 100%);box-shadow:0 8px 22px rgba(5,0,30,.3),inset 0 0 22px rgba(155,70,255,.12);color:#fff}
+.ssaza-live-top{display:flex;align-items:center;gap:9px;color:#ffe500;font-size:11px;font-weight:900;letter-spacing:1.7px}
+.ssaza-live-dot{width:9px;height:9px;border-radius:50%;background:#ff405d;box-shadow:0 0 0 4px rgba(255,64,93,.15),0 0 13px #ff405d;animation:ssazaPulse 1.4s ease-in-out infinite}
+.ssaza-live-frequency{margin-left:auto;color:#d8c5ff;font-size:10px;letter-spacing:1.2px}
+.ssaza-live-main{margin-top:9px;font-size:17px;font-weight:900;letter-spacing:.7px}
+.ssaza-live-sub{margin-top:3px;color:#d7d5ef;font-size:12px}
+.ssaza-live-wave{height:19px;display:flex;align-items:center;gap:4px;margin-top:9px;opacity:.9}
+.ssaza-live-wave i{display:block;width:4px;height:7px;border-radius:3px;background:#c23cff;animation:ssazaMiniWave .8s ease-in-out infinite alternate}
+.ssaza-live-wave i:nth-child(3n){height:16px;animation-delay:-.4s}.ssaza-live-wave i:nth-child(2n){height:11px;animation-delay:-.2s}.ssaza-live-wave i:nth-child(5n){height:18px;animation-delay:-.6s}
+@keyframes ssazaMiniWave{from{transform:scaleY(.55);opacity:.55}to{transform:scaleY(1);opacity:1}}
+@keyframes ssazaPulse{50%{opacity:.55;box-shadow:0 0 0 7px rgba(255,64,93,.08),0 0 17px #ff405d}}
+@media(prefers-reduced-motion:reduce){.ssaza-live-dot,.ssaza-live-wave i{animation:none}}
 /* SSAZA FM branded artwork above the live Caster.fm controls */
 #caster-player{min-height:0;background:transparent;border-radius:0;padding:0;color:inherit;overflow:visible;display:flex;flex-direction:column;gap:12px}
 .ssaza-player-art{width:100%;aspect-ratio:16/9;overflow:hidden;border-radius:14px;border:1px solid rgba(221,185,255,.65);background:#16002f;box-shadow:0 10px 28px rgba(18,4,38,.42),0 0 22px rgba(174,66,255,.22)}
@@ -783,7 +797,14 @@ section[aria-label="Latest news"] .news-feature .news-read{
 </g>
 <path d="M0 462 Q225 440 450 462 T900 462V506H0Z" fill="#0c001b" opacity=".8"/>
 <path d="M0 463H900" stroke="#b845ff" stroke-width="2" opacity=".7"/>
-</svg></div><div data-type="newStreamPlayer" data-publicToken="e7fe2d05-27ac-4935-9b56-4d7eb9f0152d" data-theme="dark" data-color="FFE500" data-channelId="a34855f8-171a-45d7-a514-49771491d510" data-rendered="false" class="cstrEmbed"><a href="https://www.caster.fm">Shoutcast Hosting</a> <a href="https://www.caster.fm">Stream Hosting</a> <a href="https://www.caster.fm">Radio Server Hosting</a></div></div>
+</svg></div>
+<div class="ssaza-live-now" role="status" aria-label="SSAZA FM live presenter on air">
+  <div class="ssaza-live-top"><span class="ssaza-live-dot"></span><span>ON AIR NOW</span><span class="ssaza-live-frequency">99.8 FM</span></div>
+  <div class="ssaza-live-main">LIVE PRESENTER ON AIR</div>
+  <div class="ssaza-live-sub">You're listening to SSAZA FM</div>
+  <div class="ssaza-live-wave" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+</div>
+<div data-type="newStreamPlayer" data-publicToken="e7fe2d05-27ac-4935-9b56-4d7eb9f0152d" data-theme="dark" data-color="FFE500" data-channelId="a34855f8-171a-45d7-a514-49771491d510" data-rendered="false" class="cstrEmbed"><a href="https://www.caster.fm">Shoutcast Hosting</a> <a href="https://www.caster.fm">Stream Hosting</a> <a href="https://www.caster.fm">Radio Server Hosting</a></div></div>
 <p class="hint">Live playback is provided by our existing Caster.fm station player. It needs an internet connection and the station must be on air.</p>
 </section>
 
