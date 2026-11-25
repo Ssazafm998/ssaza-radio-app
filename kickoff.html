@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#101b57">
+<meta name="description" content="KICKOFF 99.8 by SSAZA FM: daily football predictions, live scores, yesterday's results and prediction accuracy.">
+<title>KICKOFF 99.8 | SSAZA FM Football Centre</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+:root{--navy:#07156f;--navy2:#101f79;--purple:#552b82;--purple2:#7546a0;--yellow:#ffd84d;--white:#fff;--muted:#e6ddf1;--line:#a78ac5}
+*{box-sizing:border-box}body{margin:0;background:linear-gradient(180deg,#101b57,#34205a 48%,#101b57);color:var(--white);font-family:Arial,Helvetica,sans-serif}
+header{max-width:980px;margin:auto;padding:16px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.brand{font-weight:900;color:var(--yellow);letter-spacing:.5px}.brand small{display:block;color:#eee0ff;font-size:10px;letter-spacing:1.4px;margin-top:4px}
+.back{color:var(--yellow);text-decoration:none;font-size:13px;font-weight:800}
+main{max-width:980px;margin:auto;padding:8px 16px 70px}
+.hero-art{display:block;width:100%;height:auto;border-radius:16px;border:1px solid #d5b8f4;box-shadow:0 14px 32px #0005;background:#fff}
+.tagline{text-align:center;color:var(--yellow);font-weight:900;margin:14px 0 22px;font-size:clamp(15px,3vw,22px)}
+.tabs{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:18px 0}
+.tab{padding:12px 8px;border:1px solid #9874bb;border-radius:12px;background:#291849;color:#fff;font-weight:800;cursor:pointer}
+.tab.active{background:var(--yellow);color:#25133c;border-color:var(--yellow)}
+.panel{background:linear-gradient(145deg,#43265f,#21143e);border:1px solid var(--line);border-radius:16px;padding:16px;margin:12px 0;box-shadow:0 10px 24px #0003}
+h1{font-size:clamp(24px,5vw,34px);color:var(--yellow);margin:8px 0}h2{font-size:19px;color:var(--yellow);margin:0 0 12px}
+.sub{font-size:12px;color:var(--muted);line-height:1.6}.match{padding:13px 0;border-top:1px solid #765992}.match:first-child{border-top:0}
+.match-head{display:flex;justify-content:space-between;gap:10px;align-items:center}.teams{font-weight:900;font-size:15px;line-height:1.5}.kick{color:#e8d7ff;font-size:11px;text-align:right}
+.score{color:var(--yellow);font-weight:900;font-size:20px;white-space:nowrap}
+.probs{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin-top:9px}.prob{background:#1b1232;border-radius:9px;padding:8px;text-align:center;font-size:11px;color:#eee}.prob b{display:block;color:var(--yellow);font-size:16px;margin-bottom:3px}
+.status{display:inline-block;border-radius:99px;padding:4px 8px;background:#302044;color:#ffe99b;font-size:10px;font-weight:900;text-transform:uppercase}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.stat{background:#21143d;border:1px solid #684d85;border-radius:12px;padding:13px;text-align:center}.stat b{display:block;color:var(--yellow);font-size:24px}.stat span{font-size:10px;color:var(--muted)}
+.empty{padding:24px;text-align:center;color:var(--muted);font-size:13px;line-height:1.6}.error{color:#ffd1d1}
+footer{text-align:center;color:#d9c8eb;font-size:11px;padding:22px 0}
+@media(max-width:520px){.tabs{grid-template-columns:1fr}.match-head{align-items:flex-start}.stats{grid-template-columns:repeat(2,1fr)}}
+</style>
+</head>
+<body>
+<header><div class="brand">SSAZA FM 99.8<small>KICKOFF FOOTBALL CENTRE</small></div><a class="back" href="index.html">← SSAZA FM HOME</a></header>
+<main>
+<img class="hero-art" src="images/kickoff-99-8.jpg" alt="KICKOFF 99.8 footballer kicking a ball — official SSAZA FM artwork">
+<div class="tagline">Buli Mupiira. Buli Kuteebereza. Buli Kivuddemu.</div>
+<h1>KICKOFF 99.8</h1>
+<p class="sub">Eby’omupiira bya buli lunaku — okuteebereza, emipiira egigenda mu maaso, ebyava mu mipiira n’obutuufu bw’okuteebereza. Ebiteeberezebwa bya bibalo, si bukakafu.</p>
+<div class="tabs" role="tablist" aria-label="Football centre sections">
+<button class="tab active" data-view="today">Eby'Olunaku Lw'Enkya / Today</button>
+<button class="tab" data-view="live">Emipiira Egigenda mu Maaso / Live</button>
+<button class="tab" data-view="yesterday">Ebyavaamu By'eggulo / Yesterday</button>
+</div>
+<section class="panel" id="matchesPanel"><h2 id="sectionTitle">Today's predictions</h2><div id="matchList" class="empty">Loading verified football data…</div></section>
+<section class="panel"><h2>Enkola y'Okuteebereza / Prediction Accuracy</h2><div class="stats"><div class="stat"><b id="accuracy">—</b><span>Accuracy</span></div><div class="stat"><b id="correct">—</b><span>Correct</span></div><div class="stat"><b id="settled">—</b><span>Settled predictions</span></div></div><p class="sub">Accuracy is calculated from completed matches with a recorded prediction. Postponed and unfinished matches are excluded.</p></section>
+<footer>© SSAZA FM 99.8 · KICKOFF 99.8 · Buli Mupiira. Buli Kuteebereza. Buli Kivuddemu.</footer>
+</main>
+<script>
+const SUPABASE_URL="https://hdcajbocoeawospstggb.supabase.co";
+const SUPABASE_KEY="sb_publishable_tB0pW-fU9hMMHQsUdgx0yQ_GiQpD2Tu";
+const db=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+const $=id=>document.getElementById(id);
+let matches=[],predictions=[],view="today";
+const dateKey=(d)=>new Intl.DateTimeFormat("en-CA",{timeZone:"Africa/Kampala",year:"numeric",month:"2-digit",day:"2-digit"}).format(new Date(d));
+const todayKey=dateKey(new Date()),yesterdayKey=dateKey(Date.now()-86400000);
+function esc(v){return String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
+function pct(v){return Number.isFinite(Number(v))?Math.round(Number(v))+"%":"—";}
+function predictionFor(id){return predictions.find(p=>p.match_id===id);}
+function render(){
+ const title=view==="today"?"Today's predictions":view==="live"?"Live matches":"Yesterday's results";
+ $("sectionTitle").textContent=title;
+ const rows=matches.filter(m=>view==="today"?dateKey(m.kickoff_at)===todayKey:view==="yesterday"?dateKey(m.kickoff_at)===yesterdayKey:["live","in_progress","1h","ht"].includes(String(m.status).toLowerCase()));
+ if(!rows.length){$("matchList").innerHTML='<div class="empty">No verified matches are available in this section yet. Please check again when the football data feed has updated.</div>';return;}
+ $("matchList").innerHTML=rows.map(m=>{
+  const p=predictionFor(m.id),finished=["finished","ft","full_time"].includes(String(m.status).toLowerCase());
+  const score= m.home_score!==null&&m.away_score!==null?'<span class="score">'+esc(m.home_score)+' – '+esc(m.away_score)+'</span>':'';
+  const time=new Date(m.kickoff_at).toLocaleString("en-GB",{timeZone:"Africa/Kampala",day:"2-digit",month:"short",hour:"2-digit",minute:"2-digit"});
+  return '<article class="match"><div class="match-head"><div><div class="teams">'+esc(m.home_team)+' vs '+esc(m.away_team)+'</div><span class="status">'+esc(m.status||"scheduled")+'</span></div><div class="kick">'+time+' EAT<br>'+score+'</div></div>'+
+   (p?'<div class="probs"><div class="prob"><b>'+pct(p.home_win_pct)+'</b>Home</div><div class="prob"><b>'+pct(p.draw_pct)+'</b>Draw</div><div class="prob"><b>'+pct(p.away_win_pct)+'</b>Away</div></div>':'')+
+   (finished&&p?'<p class="sub">Prediction: '+esc(p.predicted_outcome||"Not recorded")+'</p>':'')+'</article>';
+ }).join("");
+}
+async function load(){
+ try{
+  const [mr,pr]=await Promise.all([
+   db.from("football_matches").select("id,competition,home_team,away_team,kickoff_at,status,home_score,away_score").order("kickoff_at",{ascending:true}).limit(300),
+   db.from("football_predictions").select("match_id,home_win_pct,draw_pct,away_win_pct,predicted_outcome,generated_at").limit(500)
+  ]);
+  if(mr.error)throw mr.error;if(pr.error)throw pr.error;
+  matches=mr.data||[];predictions=pr.data||[];
+  const settled=matches.filter(m=>["finished","ft","full_time"].includes(String(m.status).toLowerCase())).map(m=>({m,p:predictionFor(m.id)})).filter(x=>x.p);
+  const correct=settled.filter(({m,p})=>{const actual=Number(m.home_score)>Number(m.away_score)?"home":Number(m.home_score)<Number(m.away_score)?"away":"draw";return String(p.predicted_outcome||"").toLowerCase()===actual;}).length;
+  $("settled").textContent=settled.length;$("correct").textContent=correct;$("accuracy").textContent=settled.length?Math.round(correct/settled.length*100)+"%":"—";
+  render();
+ }catch(err){$("matchList").innerHTML='<div class="empty error">Football data is not connected yet. The page is ready, but the Supabase football tables and verified fixtures feed must be configured before matches can appear.</div>';console.error(err);}
+}
+document.querySelectorAll(".tab").forEach(b=>b.addEventListener("click",()=>{view=b.dataset.view;document.querySelectorAll(".tab").forEach(x=>x.classList.toggle("active",x===b));render();}));
+load();setInterval(load,60000);
+</script>
+</body>
+</html>
